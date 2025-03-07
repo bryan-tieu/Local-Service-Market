@@ -39,8 +39,7 @@ Team 18 (Super Project X 3000\)
 
 ### Purpose
 
-This document serves as a comprehensive guide for the development and understanding of the software project titled "Super Project X 3000".
-
+The purpose of this project offers an application to provide a worker profile that lists requirements and information for the employer. Requests are evaluated and job listings are viewed by the employer.
 ### 
 
 ### Audience
@@ -51,22 +50,24 @@ The intended audience of this document includes project stakeholders, developers
 
 ## Introduction
 
+The goal is to provide and receive a service from both employers and workers and rate eachother to ensure credibility. It aims to solve by viewing eachother's profiles as a way to validate credentials for its intended hired services.
 (Introduce the software project, its goals, and the problem it aims to solve)
 
 ### 
 
 ### Project Overview
 
-"ProjectX" is a web-based inventory management system designed for small businesses. It streamlines inventory tracking, order management, and reporting.
+"Local Services Market" is a web based user-interface system as user profiles for employers and workers based on matching geographic locations. It lists all types of required skills, job postings, contact information, and ratings. 
 
 ### Project Goals
 
-* Improve inventory accuracy.
+* create an appealing and functional UI for profile accounts
 
-* Enhance order fulfillment efficiency.
+* Updates real time profile information accounts
 
-* Provide real-time reporting capabilities.
+* A simple search engine based on geographic location to match profile accounts between employers and workers
 
+* functional rating page user-interface
 ## 
 
 ## Glossary
