@@ -17,9 +17,9 @@ Team 18 (Super Project X 3000\)
 5. **Sophia Kim**  
    * **Student ID**: 234567  
    * **CSULB Email**: sophia.kim@csulb.edu  
-6. **Daniel Nguyen**  
-   * **Student ID**: 901234  
-   * **CSULB Email**: daniel.nguyen@csulb.edu
+6. **Ramon Vazquez**  
+   * **Student ID**: 032323627
+   * **CSULB Email**: ramon.vazquez01@student.csulb.edu
 
 7. **Pierre Maurer**  
    * **Student ID**: 033769734  
@@ -90,13 +90,25 @@ The goal is to provide and receive a service from both employers and workers and
 
 ### User Stories
 
-(A collection of user stories that apply to the project.)
+1. As an employer, I want to be able to post jobs for workers to find and accept.
 
-1. As a registered user, I want to log in securely so that I cannot be held responsible for someone else’s actions.
+2. As a worker, I want to be able to access earnings and see if payments are processed or completed.
 
-2. As an inventory manager, I need to add new products to the inventory so that the database matches the physical inventory.
+3. As an employer, I want to be able to see the progress on a job to ensure my job is being completed on time.
 
-3. As a sales manager, I want to generate sales reports by date range so that the upper management can be kept up to date on the company’s performance.
+4. As an employer, I want to be able to securely set up a payment system to ensure my workers are paid on time.
+
+5. As a worker, I want to be able to leave reviews so that corrupt or bad employers do not hire new workers or scam anyone else.
+
+6. As an employer, I want to be able to leave reviews so good workers are recognized for good work.
+
+7. As a worker, I want to be able to search jobs that match my skills/experience to ensure I am able to do a job properly.
+
+8. As an employer, I want to be able to search for workers in my area to ensure my jobs are sufficiently scheduled.
+
+9. As a worker, I want to be able to communicate with employers so that I can perform the job correctly.
+
+10. As a worker, I want to be able to customize my profile to ensure that my resume accurately displays my skills/experience.
 
 ### 
 
