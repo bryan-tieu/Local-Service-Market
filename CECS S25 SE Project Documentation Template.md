@@ -1,6 +1,6 @@
 
 
-Team 18 (Super Project X 3000\)
+Group 6 (Local Service Market\)
 
 1. **Aaron Garcia**  
    * **Student ID**: 030556771  
@@ -11,31 +11,18 @@ Team 18 (Super Project X 3000\)
 3. **Bryan Tieu**  
    * **Student ID**: 028628533  
    * **CSULB Email**: bryan.tieu01@student.csulb.edu  
-4. **Michael Patel**  
-   * **Student ID**: 567890  
-   * **CSULB Email**: michael.patel@csulb.edu  
-5. **Sophia Kim**  
-   * **Student ID**: 234567  
-   * **CSULB Email**: sophia.kim@csulb.edu  
-6. **Ramon Vazquez**  
+4. **Ramon Vazquez**  
    * **Student ID**: 032323627
    * **CSULB Email**: ramon.vazquez01@student.csulb.edu
-
-7. **Pierre Maurer**  
+5. **Pierre Maurer**  
    * **Student ID**: 033769734  
    * **CSULB Email**: pierregermain.maurer01@student.csulb.edu
 
 ## Preface
 
-## 
-
-(Describe the purpose of this document, its expected readership and its version history, including a rationale for the creation of a new version and a summary of the changes made in each version.)
-
 | Version | Date | Changes |
 | :---- | :---- | :---- |
-| 1.0 | 2/31/XXXX | Initial Version |
-| 1.1 | 15th of Augtember, YYYY | Added Glossary |
-| 2.0 | 3/4/25 | Fixed version date notation, … |
+| 1.0 | 03/14/2025 | Initial Version |
 
 ### Purpose
 
@@ -44,9 +31,8 @@ The purpose of this project offers an application to provide a worker profile th
 
 ### Audience
 
-The intended audience of this document includes project stakeholders, developers, testers, and anyone involved in the project lifecycle.
+The intended audience of this document are the developers (Group 6) and the professor.
 
-## 
 
 ## Introduction
 
@@ -61,14 +47,13 @@ The goal is to provide and receive a service from both employers and workers and
 
 ### Project Goals
 
-* create an appealing and functional UI for profile accounts
+* Create an appealing and functional UI for profile accounts.
 
-* Updates real time profile information accounts
+* Updates real time profile information accounts.
 
-* A simple search engine based on geographic location to match profile accounts between employers and workers
+* A simple search engine based on geographic location to match profile accounts between employers and workers.
 
-* functional rating page user-interface
-## 
+* Functional rating page user-interface.
 
 ## Glossary
 
@@ -79,7 +64,6 @@ The goal is to provide and receive a service from both employers and workers and
 
 ## User Requirements and Use Cases
 
-(Outline what the system must do from the user's perspective. User stories need to use the format discussed in class and on our slides. Use cases provide detailed scenarios of system interactions.)
 
 ### 
 
@@ -118,9 +102,9 @@ The goal is to provide and receive a service from both employers and workers and
 | Initiating Actor | \[Employer\] |
 | Participating Actor(s) | \[N/A\] |
 | Pre-conditions | \[The LSM is online, and the employer has permission to post job listings.\] |
-| Post-conditions | \[What must be true about the system after the goal is achieved or abandoned\] |
-| Included Use Case(s) | \[Use cases that are included by this use case, if any\] |
-| Extension(s) | \[Extensions of this use case, if any\] |
+| Post-conditions | \[A job listing is added to the database\] |
+| Included Use Case(s) | \[Job Listing\] |
+| Extension(s) | \[N/A\] |
 
 ### 
 
@@ -128,35 +112,35 @@ The goal is to provide and receive a service from both employers and workers and
 
 | Seq\# | Actor’s Action | System’s Response |
 | :---- | :---- | :---- |
-| 1 |  |  |
-| 2 |  |  |
-| 3 |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
+| 1 | The employer signals to the system that they want to create a listing. |  |
+| 2 |  | The system acknowledges this and responds with the form. |
+| 3 | Employer fills out the form’s relevant information on the webpage in a valid manner. |  |
+| 4 |  | System checks whether the input is valid. |
+| 5 |  | Once the input is accepted, sends confirmation of valid input. |
+| 6 |  | The system then compiles the information and makes it publicly accessible on the website. |
 
 ***Table 2: Alternate Course of Action***
 
 | Seq\# | Actor’s Action | System’s Response |
 | :---- | :---- | :---- |
-| 1 |  |  |
-| 2 |  |  |
-| 3 |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
+| 1 | The employer signals to the system that they want to create a listing. |  |
+| 2 |  | The system responds with the form. |
+| 3 | Employer fills out and sends the forms to create new job but with invalid input (ex: title job to short). |  |
+| 4 |  | System determines that the input is invalid. |
+| 5 |  | System rejects the request because there is some invalid input, the system will send an error with an explanation about the error. |
+| 6 | Employer corrects the invalid input. |  |
+| 7 |  | System checks whether the input is valid. |
+| 8 |  | Once the input is accepted, sends confirmation of valid input. |
+| 9 |  | The system then compiles the information and makes it publicly accessible on the website. |
 
 ***Table 3: Exceptional Course of Action***
 
 | Seq\# | Actor’s Action | System’s Response |
 | :---- | :---- | :---- |
-| 1 |  |  |
-| 2 |  |  |
-| 3 |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
+| 1 | Employer attempts to create job listing. |  |
+| 2 |  | System’s database is not accessible. |
+| 3 |  | System tells the user that their request cannot be met at the moment. |
+
 
 ## 
 
