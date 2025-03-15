@@ -72,13 +72,8 @@ The goal is to provide and receive a service from both employers and workers and
 
 ## Glossary
 
-(Define key terms and acronyms used throughout the document, unless they are commonly known to each possible stakeholder (e.g., “Cell phone”) AND used with their common meaning. Do not expect your stakeholders to be experts. If in doubt, define a term.)
 
-* **Inventory**: The stock of products available for sale.
-
-* **SKU**: Stock Keeping Unit, a unique identifier for each product.
-
-* **API**: Application Programming Interface.
+* **LSM**: An abbreviation for Local Service Market, which is the system that users interact with to access our services.
 
 ## 
 
@@ -116,13 +111,13 @@ The goal is to provide and receive a service from both employers and workers and
 
 ### 
 
-| Identifier | \[E.g., “UC-1 Book Trip”\] |
+| Identifier | \[UC-4 Job Listing Creation\] |
 | :---- | :---- |
-| Goal | \[The initiating actor’s goal\] |
-| Requirements | \[Requirements that are addressed by this use case\] |
-| Initiating Actor | \[Actor who initiates interaction with the system\] |
-| Participating Actor(s) | \[Other actors who participate, if any\] |
-| Pre-conditions | \[The state of the system before the interaction can start\] |
+| Goal | \[The employer creates a job listing\] |
+| Requirements | \[Create job listings that others can accept\] |
+| Initiating Actor | \[Employer\] |
+| Participating Actor(s) | \[N/A\] |
+| Pre-conditions | \[The LSM is online, and the employer has permission to post job listings.\] |
 | Post-conditions | \[What must be true about the system after the goal is achieved or abandoned\] |
 | Included Use Case(s) | \[Use cases that are included by this use case, if any\] |
 | Extension(s) | \[Extensions of this use case, if any\] |
