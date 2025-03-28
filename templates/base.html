@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <title>{% block title %}{% endblock %}</title>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="{{ url_for('login') }}">Home</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    {% if 'user' not in session %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                    </li>
+                    {% if session['user_type'] == 'employer' %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('employer') }}">Employer</a>
+                    </li>
+                    {% elif session['user_type'] == 'worker' %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('worker') }}">Worker</a>
+                    </li>
+                    {% endif %}
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+          {% block content %}
+          {% endblock %}
+    </body>
+</html>
