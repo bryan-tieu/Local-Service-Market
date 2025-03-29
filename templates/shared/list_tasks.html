@@ -1,0 +1,8 @@
+{% if session['user_type'] == 'employer' %}
+    {% extends "employer/employer_base.html" %}
+{% else %}
+    {% extends "base.html" %}
+    {% endif %}
+{% block body %}
+All Tasks
+{% endblock %}
