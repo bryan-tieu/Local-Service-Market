@@ -1,0 +1,47 @@
+.post-job-container {
+    font-family: "DM Sans", sans-serif;
+    font-weight: 400;
+}
+
+.post-job-container h1 {
+    font-size: 2rem;
+    text-align: center;
+    font-weight: 600;
+    padding-top: 3rem;
+}
+.post-job-form {
+    margin: 0.2rem auto 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    height: 80vh; /* This will take up 80% of the viewport height */
+    width: 60%;
+    text-align: left;
+}
+
+#post-title {
+    width: 100%;
+    text-align: left;
+}
+
+.post-job-form label {
+    margin: 0;
+    padding: 0;
+}
+
+.post-job-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+#post-title {
+    width: 100%;
+    text-align: left;
+    margin-bottom: 0;
+}
+
+hr.title-divider {
+    border: 0;
+    height: 2px;
+    background-color: black;
+    margin: 0 0 1rem 0;
+}
