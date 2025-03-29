@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+
+{% block body %}
+<div class="login-container">
+    <div class="login-form">
+        <form action="#" method="post">
+            <p>User ID</p>
+            <input type="text" name="user_id" />
+            <input type="submit" value="Submit" />
+            {% if error %}
+                <p style="color: red;">{{error}}</p>
+            {% endif %}
+        </form>
+    </div>
+</div>
+{% endblock %}
