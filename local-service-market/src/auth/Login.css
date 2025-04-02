@@ -16,6 +16,18 @@
     background-color: #f9f9f9;
 }
 
+.login-form p {
+    color: black;
+}
+
+.login-form .form-group label {
+margin-bottom: 0px;
+}
+
+.login-form .form-group input {
+    margin: 0 !important;
+}
+
 .login-form input[type="text"] {
     width: 100%;
     padding: 8px;
@@ -36,3 +48,12 @@
 .login-form input[type="submit"]:hover {
     background-color: #45a049;
 }
+
+.error-message {
+    color: #dc3545;
+    background-color: #f8d7da;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+  
