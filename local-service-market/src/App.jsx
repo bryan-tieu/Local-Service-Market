@@ -7,6 +7,7 @@ import Navbar from './components/Navbar';
 import Users from './account/Users';
 import EmployerDashboard from './employer/Employer_Dash';
 import WorkerDashboard from './worker/Worker_Dash';
+import AccountInfo from './account/Account_Info';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -18,7 +19,7 @@ function App() {
     setCurrentUser(userData);
   }
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setIsAuthenticated(false);
     setCurrentUser(null);
   }
@@ -29,29 +30,27 @@ function App() {
       try {
         const response = await fetch('/api/check-auth', {
           headers: {
-            'Accept': 'application/json' // Explicitly ask for JSON
+            'Accept': 'application/json',
+            credentials: 'include'
           }
         });
   
         // First check if response is HTML
-        const contentType = response.headers.get('content-type');
-        if (!contentType || !contentType.includes('application/json')) {
-          console.log('Received non-JSON response, likely HTML');
-          setIsAuthenticated(false);
-          return;
-        }
   
         const data = await response.json();
         
         if (response.ok) {
+          const data = await response.json();
           setIsAuthenticated(true);
-          setCurrentUser(data.user || data); // Handle both response formats
+          setCurrentUser(data.user);
         } else {
           setIsAuthenticated(false);
+          setCurrentUser(null);
         }
       } catch (error) {
         console.error('Auth check failed:', error);
         setIsAuthenticated(false);
+        setCurrentUser(null);
       }
     };
     checkAuth();
@@ -72,6 +71,7 @@ function App() {
             <Route path='/users' element={<Users/>} />
             <Route path='/employer-dashboard' element={<EmployerDashboard/>} />
             <Route path='/worker-dashboard' element={<WorkerDashboard/>} />
+            <Route path='/account' element={<AccountInfo userData={currentUser}/>} />
           </Routes>
         </div>
       </div>

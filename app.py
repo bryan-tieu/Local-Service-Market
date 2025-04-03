@@ -8,7 +8,7 @@ import random
 # Initialize Flask app
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "lemonade"
-CORS(app)  
+CORS(app, supports_credentials=True)  
 
 # Database Config
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
@@ -144,6 +144,28 @@ def get_users():
         'email': user.email,
         'user_type': user.user_type
     } for user in users])
+
+@app.route('/api/check-auth', methods=['GET'])
+def check_auth():
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'message': 'Not authenticated'}), 401
+        
+        user = User.query.filter_by(id=user_id).first()
+        if not user:
+            return jsonify({'message': 'User not found'}), 401
+        
+        return jsonify({
+            'user': {
+                'id': user.id,
+                'name': user.name,
+                'email': user.email,
+                'userType': user.user_type
+            }
+        }), 200
+    except Exception as e:
+        return jsonify({'message': str(e)}), 500
     
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
