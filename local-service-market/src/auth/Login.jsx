@@ -3,11 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import './Login.css';
 import './AuthLayout.css'
 
-const Login = () => {
+const Login = (props) => {
   const [formData, setFormData] = useState({
     userID: '',
     password: ''
   });
+
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -21,7 +22,11 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Clear previous error messages
     setError('');
+
+    // Validate form data
     try {
       const response = await fetch('http://localhost:5000/api/login', {
         method: 'POST',
@@ -35,17 +40,25 @@ const Login = () => {
       });
 
       const data = await response.json();
-
+      
+      // Handle failed login
       if (!response.ok) {
         throw new Error(data.message || 'Login failed!');
       }
 
       console.log('Login successful:', data.user);
 
-      if (data.user.userType === 'worker') {
+      
+
+      console.log('Full API response:', data)
+      // Navigation based on user type
+      if (data.user.userType === 'Worker') {
         navigate('/worker-dashboard');
       } else {
         navigate('/employer-dashboard');
+      }
+      if (props.onLogin) {
+        props.onLogin(data.user); // Pass user data to parent component if needed
       }
     } catch (error) {
       setError(error.message);

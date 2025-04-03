@@ -54,31 +54,6 @@ html, body, #root {
   color: #888;
 }
 
-button {
-  background-color: #4CAF50; /* Green */
-  color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-button:hover {
-  background-color: #45a049; /* Darker Green */
-  transform: scale(1.05); /* Slightly enlarge on hover */
-}
-
-button:active {
-  background-color: #3e8e41; /* Even darker green when clicked */
-  transform: scale(1);
-}
-
 .navigation-buttons {
   margin-top: 20px;
 }
@@ -97,4 +72,8 @@ button:active {
 
 .navigation-buttons button:active {
   background-color: #004085; /* Even darker blue when clicked */
+}
+
+.main-content {
+  padding-top: 60px;
 }

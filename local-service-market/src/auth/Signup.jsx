@@ -7,11 +7,12 @@ const Signup = () => {
     name: '',
     email: '',
     password: '',
-    userType: 'worker'
+    userType: 'Worker'
   });
 
   const [error, setError] = useState('');
-
+  
+  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -22,10 +23,14 @@ const Signup = () => {
     if (error) setError('');
   };
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Clear previous error messages
     setError('');
 
+    // Validate form data
     try {
         const response = await fetch('http://localhost:5000/api/signup', {
           method: 'POST',
@@ -36,7 +41,8 @@ const Signup = () => {
         });
 
         const data = await response.json();
-
+        
+        // Handle failed signup
         if (!response.ok) {
           if (response.status === 409 && data.message.includes('already exists')) {
             setError('Email already exists. Please use a different email.');
@@ -47,7 +53,10 @@ const Signup = () => {
           }
         
         console.log('Signup successful:', data);
+
         setError('');
+
+        // Reset form data
         setFormData({
             name: '',
             email: '',
@@ -115,8 +124,8 @@ const Signup = () => {
             onChange={handleChange}
             required
             >
-            <option value="worker">Worker</option>
-            <option value="employer">Employer</option>
+            <option value="Worker">Worker</option>
+            <option value="Employer">Employer</option>
             </select>
           </div>
 
