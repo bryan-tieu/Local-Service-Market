@@ -75,5 +75,19 @@ html, body, #root {
 }
 
 .main-content {
+  display: flex;
+  flex-direction: column;
   padding-top: 60px;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+}
+
+/* Content wrapper */
+.content-wrapper {
+  flex: 1;
+  padding-top: 60px; /* Matches navbar height */
+  width: 100%;
+  max-width: 1200px; /* Optional: constrain width */
+  margin: 0 auto; /* Center content */
 }

@@ -1,4 +1,5 @@
 import React from "react";
+import './Employer_Dash.css';
 
 const EmployerDashboard = ({ }) => {
   return (

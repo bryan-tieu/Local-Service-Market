@@ -67,7 +67,7 @@ const Login = (props) => {
   };
 
   return (
-    <div className='auth-page-container'>
+    <div className='main-content'>
       <div className="auth-form-container">
         <h2>Login</h2>
         {error && <div className="error-message">{error}</div>}
