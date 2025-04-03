@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
+import './AuthLayout.css'
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -20,63 +21,76 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+    setError('');
     try {
-      // First check the userID format
-      if (!/^[01]\d+$/.test(formData.userID)) {
-        throw new Error('Invalid userID format');
+      const response = await fetch('http://localhost:5000/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          userID: formData.userID,
+          password: formData.password
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Login failed!');
       }
 
-      // Here you would typically call your authentication API
-      // For now, we'll just handle the navigation based on userID
-      if (formData.userID.startsWith('0')) {
-        navigate('/employer-dashboard'); // Route to employer page
-      } else if (formData.userID.startsWith('1')) {
-        navigate('/worker-dashboard'); // Route to worker page
-      }
+      console.log('Login successful:', data.user);
 
-    } catch (err) {
-      setError(err.message);
-      console.error('Login error:', err);
+      if (data.user.userType === 'worker') {
+        navigate('/worker-dashboard');
+      } else {
+        navigate('/employer-dashboard');
+      }
+    } catch (error) {
+      setError(error.message);
+      console.error('Login error:', error);
     }
   };
 
   return (
-    <div className="login-container">
-      <h2>Login</h2>
-      {error && <div className="error-message">{error}</div>}
-      
-      <form onSubmit={handleSubmit} className="login-form">
-        <div className="form-group">
-          <label htmlFor="userID">User ID</label>
-          <input
-            type="text"
-            id="userID"
-            name="userID"
-            value={formData.userID}
-            onChange={handleChange}
-            required
-            placeholder="Enter your user ID"
-          />
-        </div>
+    <div className='auth-page-container'>
+      <div className="auth-form-container">
+        <h2>Login</h2>
+        {error && <div className="error-message">{error}</div>}
         
-        <div className="form-group">
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-            placeholder="Enter your password"
-          />
-        </div>
-        
-        <button type="submit" className="login-button">
-          Login
-        </button>
-      </form>
+        <form onSubmit={handleSubmit} className="login-form">
+          <div className="form-group">
+            <label htmlFor="userID">User ID</label>
+            <input
+              type="text"
+              id="userID"
+              name="userID"
+              value={formData.userID}
+              onChange={handleChange}
+              required
+              placeholder="Enter your user ID"
+            />
+          </div>
+          
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+              placeholder="Enter your password"
+            />
+          </div>
+          
+          <button type="submit" className="login-button">
+            Login
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

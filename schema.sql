@@ -3,9 +3,10 @@ DROP TABLE IF EXISTS post;
 
 CREATE TABLE user (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT UNIQUE NOT NULL,
+    name TEXT UNIQUE NOT NULL,
+    email TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL,
-    description TEXT NOT NULL
+    user_type TEXT NOT NULL
 );
 
 CREATE TABLE listing (

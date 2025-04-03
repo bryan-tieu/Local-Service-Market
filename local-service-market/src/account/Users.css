@@ -1,0 +1,8 @@
+.users-table {
+    border-collapse: separate;
+    border-spacing: 0 0px;
+}
+
+.users-table th, .users-table td {
+    padding: 0px 20px;
+}
