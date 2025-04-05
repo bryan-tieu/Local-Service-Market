@@ -1,0 +1,8 @@
+.tasks-table {
+    border-collapse: separate;
+    border-spacing: 0 0px;
+}
+
+.tasks-table th, .tasks-table td {
+    padding: 0px 20px;
+}

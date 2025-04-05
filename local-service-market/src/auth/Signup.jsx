@@ -3,6 +3,9 @@ import './Signup.css';
 import './AuthLayout.css';
 
 const Signup = () => {
+  const [error, setError] = useState('');
+
+  // Form data state
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -10,8 +13,6 @@ const Signup = () => {
     userType: 'Worker'
   });
 
-  const [error, setError] = useState('');
-  
   // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -69,7 +70,7 @@ const Signup = () => {
   };
 
   return (
-    <div className='auth-page-container'>
+    <div className='auth-page-container main-content'>
       <div className="auth-form-container">
         <h2>Create Your Account</h2>
         {error && (

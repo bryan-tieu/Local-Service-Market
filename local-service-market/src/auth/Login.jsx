@@ -33,6 +33,7 @@ const Login = (props) => {
         headers: {
           'Content-Type': 'application/json'
         },
+        credentials: 'include',
         body: JSON.stringify({
           userID: formData.userID,
           password: formData.password
@@ -45,17 +46,15 @@ const Login = (props) => {
       if (!response.ok) {
         throw new Error(data.message || 'Login failed!');
       }
-
-      console.log('Login successful:', data.user);
-
       
-
+      console.log('Login successful:', data.user);
       console.log('Full API response:', data)
+
       // Navigation based on user type
       if (data.user.userType === 'Worker') {
         navigate('/worker-dashboard');
       } else {
-        navigate('/employer-dashboard');
+        navigate('/employer-dashboard'); 
       }
       if (props.onLogin) {
         props.onLogin(data.user); // Pass user data to parent component if needed
@@ -67,7 +66,7 @@ const Login = (props) => {
   };
 
   return (
-    <div className='main-content'>
+    <div className='auth-page-container main-content'>
       <div className="auth-form-container">
         <h2>Login</h2>
         {error && <div className="error-message">{error}</div>}

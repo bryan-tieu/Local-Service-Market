@@ -5,10 +5,20 @@ import './Navbar.css';
 const Navbar = ({ isAuthenticated, handleLogout, userType }) => {
   const navigate = useNavigate();
 
-  const handleLogoutClick = () => {
+  const handleLogoutClick = async () => {
+    try {
+      await fetch('http://localhost:5000/api/logout', {
+        method: 'POST',
+        credentials: 'include',
+    });
+    
     handleLogout();
     navigate('/login');
-  }
+
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
 
   return (
     <nav className="navbar">
@@ -35,8 +45,8 @@ const Navbar = ({ isAuthenticated, handleLogout, userType }) => {
             {userType === 'Employer' && (
               <React.Fragment>
                 <li className="nav-item">
-                  <Link to="/post-job" className="nav-links">
-                  Post Job
+                  <Link to="/post_tasks" className="nav-links">
+                  Post Task
                   </Link>
                 </li>
               </React.Fragment>

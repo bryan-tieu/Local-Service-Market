@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import "./post_tasks.css";
-import "bootstrap/dist/css/bootstrap.min.css";
+import "./Post_Tasks.css";
 
-const PostJobForm = () => {
+const PosttaskForm = () => {
+  const [error, setError] = useState("");
+
   const [formData, setFormData] = useState({
-    job_title: "",
-    job_description: "",
-    job_type: "",
+    task_title: "",
+    task_description: "",
+    task_type: "",
     location: "",
     budget: "",
     deadline: ""
@@ -16,50 +17,88 @@ const PostJobForm = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Job Posted:", formData);
+    setError('');
+
+    // Validate form data
+    try {
+      const response = await fetch('http://localhost:5000/api/posttask', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify(formData)
+      });
+
+      const data = await response.json();
+
+      // Handle failed task posting
+      if (!response.ok) {
+        setError(data.message || 'Something went wrong!');
+        return;
+      }
+
+      console.log('Task posted successfully:', data);
+      setError('');
+
+      // Reset form data
+      setFormData({
+        task_title: "",
+        task_description: "",
+        task_type: "",
+        location: "",
+        budget: "",
+        deadline: ""
+      });
+    } catch (error) {
+      console.error('Error posting task:', error);
+      setError('Error posting task. Please try again later.');
+    }
+    
+    console.log('Form submitted:', formData);
   };
 
   return (
-    <div className="post-job-container">
-      <div className="post-job-form">
-        <h1 id="post-title">Post a Job</h1>
+    <div className="post-task-container main-content">
+      <div className="post-task-form-container">
+        <h1 id="post-title">Post a Task</h1>
         <hr className="title-divider" />
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="post-task-form">
           <div className="form-group">
-            <label htmlFor="job_title">Job Title</label>
+            <label htmlFor="task_title">Task Title</label>
             <input
-              id="job_title"
+              id="task_title"
               type="text"
-              name="job_title"
+              name="task_title"
               className="form-control"
               required
-              value={formData.job_title}
+              value={formData.task_title}
               onChange={handleChange}
             />
           </div>
           
           <div className="form-group">
-            <label htmlFor="job_description">Job Description</label>
+            <label htmlFor="task_description">Task Description</label>
             <textarea
-              id="job_description"
-              name="job_description"
+              id="task_description"
+              name="task_description"
               className="form-control"
               required
-              value={formData.job_description}
+              value={formData.task_description}
               onChange={handleChange}
             />
           </div>
           
           <div className="form-group">
-            <label htmlFor="job_type">Job Category</label>
+            <label htmlFor="task_type">Task Category</label>
             <select
-              id="job_type"
+              id="task_type"
               className="form-control"
-              name="job_type"
+              name="task_type"
               required
-              value={formData.job_type}
+              value={formData.task_type}
               onChange={handleChange}
             >
               <option value="">Select a Category</option>
@@ -118,7 +157,7 @@ const PostJobForm = () => {
           </div>
           
           <div className="form-group">
-            <input type="submit" className="btn btn-primary" value="Post Job" />
+            <button type="submit" className="post-task-button">Post task</button>
           </div>
         </form>
       </div>
@@ -126,4 +165,4 @@ const PostJobForm = () => {
   );
 };
 
-export default PostJobForm;
+export default PosttaskForm;

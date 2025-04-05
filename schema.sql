@@ -9,15 +9,15 @@ CREATE TABLE user (
     user_type TEXT NOT NULL
 );
 
-CREATE TABLE listing (
+CREATE TABLE task (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  creator_id INTEGER NOT NULL,
-  created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  title TEXT NOT NULL,
-  body TEXT NOT NULL,
+  user_id INTEGER NOT NULL,
+  created TIMESTAMP NOT NULL DEFAULT (datetime('now', 'localtime')),
+  task_title TEXT NOT NULL,
+  task_description TEXT NOT NULL,
   category TEXT NOT NULL,
   location TEXT NOT NULL,
   budget INTEGER NOT NULL,
   deadline TIMESTAMP NOT NULL,
-  FOREIGN KEY (creator_id) REFERENCES user (id)
+  FOREIGN KEY (user_id) REFERENCES user (id)
 );

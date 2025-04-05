@@ -78,11 +78,15 @@ html, body, #root {
   display: flex;
   flex-direction: column;
   padding-top: 60px;
-  justify-content: center;
+  justify-content: top;
   align-items: center;
   min-height: 60vh;
+  margin-top: 60px;
 }
 
+.main-content h1 {
+  margin: 0;
+}
 /* Content wrapper */
 .content-wrapper {
   flex: 1;

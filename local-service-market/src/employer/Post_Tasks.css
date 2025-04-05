@@ -1,0 +1,143 @@
+.post-task-container {
+    display: flex;
+    align-items: center;
+    min-height: 100vh;
+    width: 100%;
+    position: relative;
+    padding-top: 80px;
+    box-sizing: border-box;
+}
+
+.post-task-form-container {
+    width: 100%;
+    max-width: 600px;
+    padding: 2rem;
+    margin: 0 auto;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    position: relative;
+}
+
+.post-task-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#post-title {
+    color: black;
+    font-weight: 640;
+}
+
+.post-task-form .form-group {
+    margin-bottom: 0;
+}
+
+.post-task-form input[type="text"],
+.post-task-form input[type="number"],
+.post-task-form textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+    color: black;
+    background-color: white;
+}
+
+.post-task-form input[type="text"]:focus,
+.post-task-form input[type="number"]:focus,
+.post-task-form textarea:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+.post-task-button {
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.post-task-button:hover {
+    background-color: #0056b3;
+}
+
+.error-message {
+    color: #dc3545;
+    background-color: #f8d7da;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.success-message {
+    color: #28a745;
+    background-color: #d4edda;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.post-task-form select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+    background-color: white;
+    color: black;
+}
+
+.input-group {
+    display: flex;
+    position: relative;
+  }
+  
+.input-group-text {
+position: absolute;
+left: 10px;
+top: 45%;
+transform: translateY(-50%);
+z-index: 2;
+color: #555;
+font-weight: bold;
+}
+
+.input-group input[type="number"] {
+    width: 100%;
+    padding: 10px 10px 10px 25px !important;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+    position: relative;
+    background-color: white;
+  }
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+-webkit-appearance: none;
+margin: 0;
+}
+
+.form-control[type="date"] {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: white;
+    color: black;
+    width: 100%;
+    box-sizing: border-box;
+  }

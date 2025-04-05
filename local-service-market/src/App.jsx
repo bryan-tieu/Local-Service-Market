@@ -4,10 +4,12 @@ import './App.css'
 import LoginForm from './auth/Login';
 import Signup from './auth/Signup';
 import Navbar from './components/Navbar';
-import Users from './account/Users';
+import Users from './backend-handling/Users';
 import EmployerDashboard from './employer/Employer_Dash';
 import WorkerDashboard from './worker/Worker_Dash';
 import AccountInfo from './account/Account_Info';
+import PostJobForm from './employer/Post_Tasks';
+import Tasks from './backend-handling/Tasks';                          
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -28,22 +30,26 @@ function App() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('/api/check-auth', {
+        const response = await fetch('http://localhost:5000/api/check-auth', {
+          credentials: 'include',
           headers: {
             'Accept': 'application/json',
-            credentials: 'include'
+            'Content-Type': 'application/json'
           }
         });
-  
-        // First check if response is HTML
-  
-        const data = await response.json();
+
+        if (response.status === 401) {
+          setIsAuthenticated(false);
+          setCurrentUser(null);
+          return;
+        }
         
-        if (response.ok) {
-          const data = await response.json();
+        const data = await response.json();
+
+        if (data.authenticated) {
           setIsAuthenticated(true);
-          setCurrentUser(data.user);
-        } else {
+          setCurrentUser(data.user); 
+        } else{
           setIsAuthenticated(false);
           setCurrentUser(null);
         }
@@ -72,6 +78,8 @@ function App() {
             <Route path='/employer-dashboard' element={<EmployerDashboard/>} />
             <Route path='/worker-dashboard' element={<WorkerDashboard/>} />
             <Route path='/account' element={<AccountInfo userData={currentUser}/>} />
+            <Route path='/post_tasks' element={<PostJobForm/>} />
+            <Route path='/tasks' element={<Tasks/>} />
           </Routes>
         </div>
       </div>
