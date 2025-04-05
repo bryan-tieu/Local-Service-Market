@@ -29,7 +29,7 @@ app.config.update(
 # Update CORS to be more permissive for debugging
 CORS(app, 
     supports_credentials=True,
-    origins=["http://localhost:5174"],
+    origins=["http://localhost:5174", "http://localhost:5173"],
     allow_headers=["Content-Type", "Authorization", "credentials"],
     methods=["GET", "POST", "PUT", "DELETE"],
     expose_headers=["Set-Cookie"]
