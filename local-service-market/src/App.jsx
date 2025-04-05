@@ -38,6 +38,7 @@ function App() {
           }
         });
 
+        // Handle unauthorized access
         if (response.status === 401) {
           setIsAuthenticated(false);
           setCurrentUser(null);
@@ -45,7 +46,8 @@ function App() {
         }
         
         const data = await response.json();
-
+        
+        // Update authentication state based on response
         if (data.authenticated) {
           setIsAuthenticated(true);
           setCurrentUser(data.user); 
@@ -59,6 +61,7 @@ function App() {
         setCurrentUser(null);
       }
     };
+    
     checkAuth();
   }, []);
 
@@ -70,6 +73,7 @@ function App() {
           handleLogout={handleLogout}
           userType={currentUser && currentUser.userType}
         />
+        
         <div className="content-container">
           <Routes>
             <Route path='/login' element={<LoginForm onLogin={handleLogin} />} />

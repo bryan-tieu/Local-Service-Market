@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { parse, format } from 'date-fns';
 import './Tasks.css';
 
 const Tasks = () => {
@@ -42,76 +43,70 @@ const Tasks = () => {
   const formatDeadline = (dateString) => {
     if (!dateString) return 'N/A';
     
-    // Split the date string into parts (assuming format is DD-MM-YYYY)
-    const parts = dateString.split('-');
-    if (parts.length !== 3) return dateString; // Return original if format doesn't match
-    
-    const day = parts[0];
-    const month = parts[1];
-    const year = parts[2];
-    
-    // Create a date object (months are 0-indexed in JavaScript)
-    const date = new Date(year, month - 1, day);
-    
-    // Format the date as "Month Day, Year"
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
+    try {
+      // Try multiple date formats
+      const possibleFormats = [
+        'dd-MM-yyyy',
+        'MM/dd/yyyy',
+        'dd/MM/yyyy',
+        'yyyy-MM-dd'
+      ];
+      
+      let parsedDate;
+      for (const fmt of possibleFormats) {
+        parsedDate = parse(dateString, fmt, new Date());
+        if (!isNaN(parsedDate.getTime())) break;
+      }
+      
+      if (isNaN(parsedDate.getTime())) return dateString;
+      
+      return format(parsedDate, 'MMMM d, yyyy');
+    } catch {
+      return dateString;
+    }
   };
 
   if (loading) return <div>Loading tasks...</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="tasks-container">
-      <h2>All Tasks</h2>
-      <table className="tasks-table">
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Deadline</th>
-          </tr>
-        </thead>
-        <tbody>
+    <div className="main-content">
+      <div className="tasks-container">
+        <h2>All Tasks</h2>
+        <div className="tasks-list">
           {tasks.map((task) => (
-            <React.Fragment key={task.id}>
-              <tr 
-                onClick={() => toggleTaskExpand(task.id)}
-                className="task-row"
-                style={{ cursor: 'pointer' }}
-              >
-                <td>{task.task_title}</td>
-                <td>{formatDeadline(task.deadline)}</td>
-              </tr>
+            <div 
+              key={task.id} 
+              className={`task-card ${expandedTaskId === task.id ? 'expanded' : ''}`}
+              onClick={() => toggleTaskExpand(task.id)}
+            >
+              <div className="task-summary">
+                <span className="task-title">{task.task_title}</span>
+                <span className="task-deadline">{formatDeadline(task.deadline)}</span>
+              </div>
               {expandedTaskId === task.id && (
-                <tr className="expanded-details">
-                  <td colSpan="2">
-                    <div className="details-container">
-                      <p><strong>ID:</strong> {task.id}</p>
-                      <p><strong>Created:</strong> {task.date_created ? new Date(task.date_created).toLocaleString('en-US', {
-                        timeZone: 'America/Los_Angeles',
-                        year: 'numeric',
-                        month: '2-digit',
-                        day: '2-digit',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: true
-                      }) : 'N/A'}</p>
-                      <p><strong>Description:</strong> {task.task_description}</p>
-                      <p><strong>Type:</strong> {task.task_type}</p>
-                      <p><strong>Location:</strong> {task.location}</p>
-                      <p><strong>Budget:</strong> ${task.budget.toFixed(2)}</p>
-                      <p><strong>User ID:</strong> {task.user_id}</p>
-                    </div>
-                  </td>
-                </tr>
+                <div className="task-details">
+                  <p><strong>ID:</strong> {task.id}</p>
+                  <p><strong>Created:</strong> {task.date_created ? new Date(task.date_created).toLocaleString('en-US', {
+                    timeZone: 'America/Los_Angeles',
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true
+                  }) : 'N/A'}</p>
+                  <p><strong>Description:</strong> {task.task_description}</p>
+                  <p><strong>Type:</strong> {task.task_type}</p>
+                  <p><strong>Location:</strong> {task.location}</p>
+                  <p><strong>Budget:</strong> ${task.budget.toFixed(2)}</p>
+                  <p><strong>User ID:</strong> {task.user_id}</p>
+                </div>
               )}
-            </React.Fragment>
+            </div>
           ))}
-        </tbody>
-      </table>
+        </div>
+      </div>
     </div>
   );
 };

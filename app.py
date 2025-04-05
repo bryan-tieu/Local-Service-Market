@@ -10,15 +10,15 @@ import random
 
 # Initialize Flask app
 app = Flask(__name__)
-# Add these critical session configurations ABOVE your routes
+
+# App Config
 app.config.update(
-    # Use a proper secret key (not "lemonade")
     SECRET_KEY = 'lemonade',
     
     # Session settings
     SESSION_COOKIE_NAME = 'my_cookie',
     SESSION_COOKIE_HTTPONLY = True,
-    SESSION_COOKIE_SECURE = False,  # True in production with HTTPS
+    SESSION_COOKIE_SECURE = False,
     SESSION_COOKIE_SAMESITE = 'Lax',
     PERMANENT_SESSION_LIFETIME = 86400,  # 1 day in seconds
     
@@ -26,7 +26,7 @@ app.config.update(
     SESSION_COOKIE_DOMAIN =None  
 )
 
-# Update CORS to be more permissive for debugging
+# CORS Settings
 CORS(app, 
     supports_credentials=True,
     origins=["http://localhost:5174", "http://localhost:5173"],
@@ -48,6 +48,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True) 
     name = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False, index=True)
+    phone_number = db.Column(db.String(15), nullable=False)
     password = db.Column(db.String(128), nullable=False)
     user_type = db.Column(db.String(20), nullable=False)
 
@@ -69,6 +70,7 @@ class Task(db.Model):
 with app.app_context():
     db.create_all()
 
+# Decorators
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -107,6 +109,7 @@ def signup():
             id=user_id,
             name=data['name'],
             email=data['email'],
+            phone_number=data['phoneNumber'],
             password=hashed_password,
             user_type=data['userType']
         )
@@ -122,6 +125,7 @@ def signup():
                 'id': user.id,
                 'name': user.name,
                 'email': user.email,
+                'phone_number': user.phone_number,
                 'userType': user.user_type
             }
         }), 201
@@ -137,18 +141,19 @@ def login():
     
     try:
         data = request.get_json()
-        
+
         # Extract data
-        userID = data.get('userID')
+        userEmail = data.get('userEmail')
         password = data.get('password')
         
+        
         # Check for required fields
-        if not userID or not password:
-            return jsonify({'message': 'UserID and password are required'}), 400
+        if not userEmail or not password:
+            return jsonify({'message': 'Email and password are required'}), 400
         
-        # Find user by ID
-        user = User.query.filter_by(id=userID).first()
-        
+        # Find user by Email
+        user = User.query.filter_by(email=userEmail).first()
+        print(user)
         # Check if user exists
         if not user:
             return jsonify({'message': 'User not found'}), 404
@@ -158,7 +163,6 @@ def login():
             
             # Store user ID in session
             session['user_id'] = user.id
-            session['user_id'] = user.id  # Store user ID in session
             
             # Return success response
             return jsonify({
@@ -168,6 +172,7 @@ def login():
                     'id': user.id,
                     'name': user.name,
                     'email': user.email,
+                    'phone_number': user.phone_number,
                     'userType': user.user_type
                 }
             })
@@ -195,6 +200,7 @@ def get_users():
         'id': f"{user.id:08d}",
         'name': user.name,
         'email': user.email,
+        'phone_number': user.phone_number,
         'user_type': user.user_type
     } for user in users])
 
@@ -202,11 +208,15 @@ def get_users():
 def get_tasks():
     try:
         user_id = session.get('user_id')
+        
+        # Check if user is authenticated
         if not user_id:
             return jsonify({'message': 'Not authenticated'}), 401
         
         tasks = Task.query.filter_by(user_id=user_id).all()
         pst = pytz.timezone('America/Los_Angeles')
+        
+        # Return tasks as JSON
         return jsonify([{
             'id': task.id,
             'date_created': task.created.astimezone(pst).isoformat() if task.created else None,
@@ -227,19 +237,25 @@ def get_tasks():
 def check_auth():
     try:
         user_id = session.get('user_id')
+        
+        # Check if user is authenticated
         if not user_id:
             return jsonify({'message': 'Not authenticated'}), 401
         
         user = User.query.filter_by(id=user_id).first()
+        
+        # Check if user exists
         if not user:
             return jsonify({'message': 'User not found'}), 401
         
+        # Return user information
         return jsonify({
             'authenticated': True,
             'user': {
                 'id': user.id,
                 'name': user.name,
                 'email': user.email,
+                'phone_number': user.phone_number,
                 'userType': user.user_type
             }
         }), 200
@@ -248,17 +264,20 @@ def check_auth():
     
 @app.route('/api/posttask', methods=['POST'])
 def post_task():
-    print(f"Current session: {session}")
-    print(f"Session contents: {dict(session)}")
-    print(f"Cookies received: {request.cookies}")
+    
+    # Check if user is authenticated
     if 'user_id' not in session:
         return jsonify({'message': 'Please login first'}), 401
     
     user_id = session.get('user_id')
+    
+    # Check if user exists
     if not user_id:
         return jsonify({'message': 'Not authenticated'}), 401
     
     user = User.query.get(user_id)
+    
+    # Check if user exists
     if not user:
         return jsonify({'message': 'User not found'}), 404
     
@@ -284,6 +303,7 @@ def post_task():
         db.session.add(task)
         db.session.commit()
         
+        # Return success response
         return jsonify({
             'message': 'Task posted successfully',
             'task': {
@@ -307,9 +327,12 @@ def post_task():
 @app.route('/api/logout', methods=['POST'])
 def logout():
     try:
+        
+        # Clear the session
         session.clear()
         response = jsonify({'message': 'Logged out successfully'})
         
+        # Clear the cookie
         response.set_cookie(
             'my_cookie',
             value='',

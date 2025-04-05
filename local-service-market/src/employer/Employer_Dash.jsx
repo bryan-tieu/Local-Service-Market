@@ -13,9 +13,7 @@ const EmployerDashboard = ({ }) => {
                 credentials: 'include',
             });
 
-            console.log("Auth check response:", response); // Debugging line
             const data = await response.json();
-            console.log("Auth check data:", data); // Debugging line
             if (!data.authenticated) {
                 navigate('/login');
             }

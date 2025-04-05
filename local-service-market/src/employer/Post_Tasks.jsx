@@ -4,6 +4,7 @@ import "./Post_Tasks.css";
 const PosttaskForm = () => {
   const [error, setError] = useState("");
 
+  // Form data state
   const [formData, setFormData] = useState({
     task_title: "",
     task_description: "",
@@ -13,10 +14,12 @@ const PosttaskForm = () => {
     deadline: ""
   });
 
+  // Handle input changes
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -63,7 +66,7 @@ const PosttaskForm = () => {
   return (
     <div className="post-task-container main-content">
       <div className="post-task-form-container">
-        <h1 id="post-title">Post a Task</h1>
+        <h2 id="post-title">Post a Task</h2>
         <hr className="title-divider" />
         <form onSubmit={handleSubmit} className="post-task-form">
           <div className="form-group">

@@ -5,7 +5,7 @@ import './AuthLayout.css'
 
 const Login = (props) => {
   const [formData, setFormData] = useState({
-    userID: '',
+    email: '',
     password: ''
   });
 
@@ -35,20 +35,17 @@ const Login = (props) => {
         },
         credentials: 'include',
         body: JSON.stringify({
-          userID: formData.userID,
+          userEmail: formData.email,
           password: formData.password
         })
       });
 
       const data = await response.json();
-      
+
       // Handle failed login
       if (!response.ok) {
         throw new Error(data.message || 'Login failed!');
       }
-      
-      console.log('Login successful:', data.user);
-      console.log('Full API response:', data)
 
       // Navigation based on user type
       if (data.user.userType === 'Worker') {
@@ -56,9 +53,12 @@ const Login = (props) => {
       } else {
         navigate('/employer-dashboard'); 
       }
+
+      // Call the onLogin prop if provided
       if (props.onLogin) {
-        props.onLogin(data.user); // Pass user data to parent component if needed
+        props.onLogin(data.user);
       }
+
     } catch (error) {
       setError(error.message);
       console.error('Login error:', error);
@@ -73,15 +73,15 @@ const Login = (props) => {
         
         <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group">
-            <label htmlFor="userID">User ID</label>
+            <label htmlFor="email">Email</label>
             <input
               type="text"
-              id="userID"
-              name="userID"
-              value={formData.userID}
+              id="email"
+              name="email"
+              value={formData.email}
               onChange={handleChange}
               required
-              placeholder="Enter your user ID"
+              placeholder="Enter your email"
             />
           </div>
           

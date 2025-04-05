@@ -95,3 +95,9 @@ html, body, #root {
   max-width: 1200px; /* Optional: constrain width */
   margin: 0 auto; /* Center content */
 }
+
+.content-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
