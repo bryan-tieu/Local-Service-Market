@@ -22,3 +22,12 @@ CREATE TABLE task (
   deadline TIMESTAMP NOT NULL,
   FOREIGN KEY (user_id) REFERENCES user (id)
 );
+
+CREATE TABLE skill (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  skill_name TEXT NOT NULL,
+  proficiency INTEGER NOT NULL,
+  years_of_experience INTEGER NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES user (id)
+)

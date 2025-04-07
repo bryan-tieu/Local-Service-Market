@@ -35,8 +35,8 @@ const Navbar = ({ isAuthenticated, handleLogout, userType }) => {
             {userType === 'Worker' && (
               <React.Fragment>
                 <li className="nav-item">
-                  <Link to="/find-jobs" className="nav-links">
-                  Find Jobs
+                  <Link to="/find_tasks" className="nav-links">
+                  Find Tasks
                   </Link>
                 </li>
               </React.Fragment>

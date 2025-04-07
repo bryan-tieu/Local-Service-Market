@@ -16,3 +16,43 @@
 .user-details {
     color: black;
 }
+
+.skills-container {
+    padding: 2rem;
+    background: white;
+    max-width: 600px;
+    width: 100%;
+    margin: 0 auto;
+    border-radius: 8px;
+}
+
+.skills-container h1 {
+    font-size: 2rem;
+    margin: 0 0 16px 0;
+    color: black;
+    margin-bottom: 0;
+}
+
+#skill-name {
+    width: 200px !important
+}
+
+#skill-name,
+#skill-proficiency,
+#skill-years {
+    width: 100px;
+    padding: 10px;
+    margin: 10px 10px 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+    color: black;
+    background-color: white;
+}
+
+#add-skill-button {
+    color: white;
+    background-color: #007bff;
+}
+

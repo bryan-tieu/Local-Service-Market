@@ -82,6 +82,7 @@ html, body, #root {
   align-items: center;
   min-height: 60vh;
   margin-top: 60px;
+  gap: 30px;
 }
 
 .main-content h1 {

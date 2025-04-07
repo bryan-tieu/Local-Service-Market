@@ -52,6 +52,15 @@ class User(db.Model):
     password = db.Column(db.String(128), nullable=False)
     user_type = db.Column(db.String(20), nullable=False)
 
+class Skill(db.Model):
+    __tablename__ = 'skill'
+    id = db.Column(db.Integer, primary_key=True)
+    skill_name = db.Column(db.String(80), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    proficiency = db.Column(db.Integer, nullable=False)
+    years_of_experience = db.Column(db.Integer, nullable=False)
+    user = db.relationship('User', backref='skills')
+    
 class Task(db.Model):
     __tablename__ = 'task'
     id = db.Column(db.Integer, primary_key=True)
@@ -232,6 +241,29 @@ def get_tasks():
     except Exception as error:
         return jsonify({'message': str(error)}), 500
 
+@app.route('/api/find_tasks', methods=['GET'])
+def find_tasks():
+    try:
+        tasks = Task.query.all()
+        print(tasks)
+        pst = pytz.timezone('America/Los_Angeles')
+        
+        # Return tasks as JSON
+        return jsonify([{
+            'id': task.id,
+            'date_created': task.created.astimezone(pst).isoformat() if task.created else None,
+            'task_title': task.task_title,
+            'task_description': task.task_description,
+            'task_type': task.task_type,
+            'location': task.location,
+            'budget': task.budget,
+            'deadline': task.deadline,
+            'user_id': f"{task.user_id:08d}"
+        } for task in tasks])
+        
+    except Exception as error:
+        return jsonify({'message': str(error)}), 500
+    
 @app.route('/api/check-auth', methods=['GET'])
 @login_required
 def check_auth():
@@ -345,6 +377,87 @@ def logout():
         return response
     except Exception as error:
         return jsonify({'message': str(error)}), 500
+    
+# Get skills for current user
+@app.route('/api/skills', methods=['GET'])
+@login_required
+def get_skills():
+    try:
+        user_id = session.get('user_id')
+        skills = Skill.query.filter_by(user_id=user_id).all()
+        return jsonify([{
+            'id': skill.id,
+            'name': skill.name,
+            'proficiency': skill.proficiency,
+            'years_of_experience': skill.years_of_experience
+            } for skill in skills]), 200
+    except Exception as e:
+        return jsonify({'message': str(e)}), 500
+
+# Add a new skill
+@app.route('/api/skills', methods=['POST'])
+@login_required
+def add_skill():
+    try:
+        user_id = session.get('user_id')
+        data = request.get_json()
+        print('Received data:', data)
+        # Validate required fields
+        required_fields = ['name', 'proficiency', 'years_of_experience']
+        if not all(field in data for field in required_fields):
+            return jsonify({'message': 'Missing required fields'}), 400
+
+        # Validate proficiency range
+        if not (1 <= data['proficiency'] <= 10):
+            return jsonify({'message': 'Proficiency must be between 1-10'}), 400
+
+        # Validate years_of_experience
+        if data['years_of_experience'] < 0:
+            return jsonify({'message': 'Experience cannot be negative'}), 400
+
+        skill = Skill(
+            name=data['name'],
+            proficiency=data['proficiency'],
+            years_of_experience=data['years_of_experience'],
+            user_id=user_id
+        )
+        
+        db.session.add(skill)
+        db.session.commit()
+        
+        return jsonify({
+            'message': 'Skill added successfully',
+            'skill': {
+                'id': skill.id,
+                'name': skill.name,
+                'proficiency': skill.proficiency,
+                'years_of_experience': skill.years_of_experience
+            }
+        }), 201
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'message': str(e)}), 500
+
+# Delete a skill
+@app.route('/api/skills/<int:skill_id>', methods=['DELETE'])
+@login_required
+def delete_skill(skill_id):
+    try:
+        user_id = session.get('user_id')
+        skill = Skill.query.filter_by(id=skill_id, user_id=user_id).first()
+        
+        if not skill:
+            return jsonify({'message': 'Skill not found'}), 404
+            
+        db.session.delete(skill)
+        db.session.commit()
+        
+        return jsonify({'message': 'Skill deleted successfully'}), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'message': str(e)}), 500
     
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
