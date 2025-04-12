@@ -72,6 +72,9 @@ class Task(db.Model):
     deadline = db.Column(db.String(20), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     created = db.Column(db.DateTime(timezone=True), nullable=False, server_default=db.func.now())
+
+    worker_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    status = db.Column(db.String(20), default='open')
     
     user = db.relationship('User', backref='tasks')
     
