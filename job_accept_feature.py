@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from models import db, Task
+from models import LocalServiceMarket.db, Task
 
 
 @app.route('/accept_task/<int:task_id>'), methods=['POST'])
