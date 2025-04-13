@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { parse, format } from 'date-fns';
 import './Tasks.css';
 
-const Tasks = () => {
+const Tasks = (props) => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -11,7 +11,11 @@ const Tasks = () => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/tasks', {
+        const endpoint = props.findAll
+        ? 'http://localhost:5000/api/find_tasks'
+        : 'http://localhost:5000/api/tasks';
+
+        const response = await fetch(endpoint, {
           credentials: 'include',
           headers: {
             'Accept': 'application/json',
@@ -34,7 +38,7 @@ const Tasks = () => {
     };
 
     fetchTasks();
-  }, []);
+  }, [props.findAll]);
 
   const toggleTaskExpand = (taskId) => {
     setExpandedTaskId(expandedTaskId === taskId ? null : taskId);
@@ -86,7 +90,7 @@ const Tasks = () => {
               </div>
               {expandedTaskId === task.id && (
                 <div className="task-details">
-                  <p><strong>ID:</strong> {task.id}</p>
+                  <p><strong>Employer Name:</strong> {task.employer_name}</p>
                   <p><strong>Created:</strong> {task.date_created ? new Date(task.date_created).toLocaleString('en-US', {
                     timeZone: 'America/Los_Angeles',
                     year: 'numeric',

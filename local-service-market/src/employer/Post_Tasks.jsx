@@ -26,7 +26,7 @@ const PosttaskForm = () => {
 
     // Validate form data
     try {
-      const response = await fetch('http://localhost:5000/api/posttask', {
+      const response = await fetch('http://localhost:5000/api/post_task', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

@@ -6,6 +6,7 @@ import './AuthLayout.css';
 const Signup = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
 
   // Form data state
   const [formData, setFormData] = useState({
@@ -96,14 +97,6 @@ const Signup = () => {
           <div className='error-message'>{error}</div>
         )}
 
-        {success && (
-          <div className='success-message'>
-            <p>{success.message}</p>
-            <p>Your User ID: <strong>{success.userID}</strong></p>
-            <p>Please remember this ID for login.</p>
-          </div>
-        )}
-
         {!success && (
           <form onSubmit={handleSubmit} className="signup-form">
             <div className="form-group">
@@ -134,14 +127,13 @@ const Signup = () => {
             
             <div className="form-group">
               <label htmlFor="phone-number">Phone Number</label>
-              <Input
+              +1<Input
                 country="US"
-                id="phone-number"
-                name="phoneNumber"
                 value={formData.phoneNumber}
                 onChange={handlePhoneChange}
                 placeholder='Enter your phone number'
-                required/>
+                international
+                />
             </div>
   
             <div className="form-group">
