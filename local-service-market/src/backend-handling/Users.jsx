@@ -29,37 +29,32 @@ const Users = () => {
         setUsers(data);
       } catch (err) {
         setError(err.message);
-      } finally {
-        setLoading(false);
       }
     };
     
     fetchUsers();
   }, []);
 
-  if (loading) return <div className="loading">Loading users...</div>;
-  if (error) return <div className="error">Error: {error}</div>;
-
   return (
     <div className="main-content">
-      <div className="users-container">
+      <div className="table-container">
         <h2>All Users</h2>
-        <div className="user-cards">
+        <div className="table-cards">
           {users.map((user) => (
-            <div className="user-card" key={user.id}>
-              <div className="user-field">
+            <div className="content-card" key={user.id}>
+              <div className="info-field">
                 <strong>ID:</strong> {user.id}
               </div>
-              <div className="user-field">
+              <div className="info-field">
                 <strong>Name:</strong> {user.name}
               </div>
-              <div className="user-field">
+              <div className="info-field">
                 <strong>Email:</strong> {user.email}
               </div>
-              <div className="user-field">
+              <div className="info-field">
                 <strong>Phone:</strong> {formatPhoneNumber(user.phone_number)}
               </div>
-              <div className="user-field">
+              <div className="info-field">
                 <strong>Type:</strong> {user.user_type}
               </div>
             </div>

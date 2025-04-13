@@ -66,10 +66,7 @@ const Signup = () => {
           return;
           }
         
-          setSuccess({
-            message: 'Signup successful!',
-            userID: data.userID,
-          })
+          setSuccess(true);
             
         console.log('Signup successful:', data);
 
@@ -96,7 +93,9 @@ const Signup = () => {
         {error && (
           <div className='error-message'>{error}</div>
         )}
-
+        {success && (
+          <div className="success-message">Signup Successful!</div>
+        )}
         {!success && (
           <form onSubmit={handleSubmit} className="signup-form">
             <div className="form-group">

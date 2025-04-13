@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './Display.css'; // Reuse your existing CSS
+import './Display.css';
 
 const AllTasks = () => {
   const [tasks, setTasks] = useState([]);
@@ -38,55 +38,47 @@ const AllTasks = () => {
     fetchTasks();
   }, []);
 
-  if (loading) return <div className="loading">Loading tasks...</div>;
-  if (error) return <div className="error">Error: {error}</div>;
-
   return (
     <div className="main-content">
-      <div className="users-container"> {/* Reusing users container styles */}
+      <div className="table-container">
         <h2>All Tasks</h2>
-        <div className="user-cards"> {/* Reusing user-cards grid */}
+        <div className="table-cards">
           {tasks.map((task) => (
-            <div className="user-card" key={task.id}> {/* Reusing card style */}
-              <div className="user-field">
+            <div className="content-card" key={task.id}> 
+              <div className="info-field">
                 <strong>Title:</strong> {task.task_title}
               </div>
-              <div className="user-field">
+              <div className="info-field">
                 <strong>Status:</strong> {task.status}
               </div>
-              <div className="user-field">
+              <div className="info-field">
                 <strong>Employer:</strong> {task.employer_name}
               </div>
-              <div className="user-field">
+              <div className="info-field">
                 <strong>Employer ID:</strong> {task.employer_id}
                 </div>
-                <div className="user-field">
+                <div className="info-field">
                 <strong>Worker:</strong> {task.worker_name}
                 </div>
-                <div className="user-field">
+                <div className="info-field">
                 <strong>Worker ID:</strong> {task.worker_id}
                 </div>
-              {task.worker && (
-                <div className="user-field">
-                  <strong>Worker:</strong> {task.worker.name}
-                </div>
-              )}
-              <div className="user-field">
+              <div className="info-field">
                 <strong>Budget:</strong> ${task.budget.toFixed(2)}
               </div>
-              <div className="user-field">
+              <div className="info-field">
                 <strong>Deadline:</strong> {formatDate(task.deadline)}
               </div>
-              <div className="user-field">
+              <div className="info-field">
                 <strong>Created:</strong> {formatDate(task.date_created)}
               </div>
-              <div className="user-field">
+              <div className="info-field">
                 <strong>Location:</strong> {task.location}
               </div>
-              <div className="user-field">
+              <div className="info-field">
                 <strong>Type:</strong> {task.task_type}
               </div>
-              <div className="user-field description">
+              <div className="info-field description">
                 <strong>Description:</strong> {task.task_description}
               </div>
             </div>

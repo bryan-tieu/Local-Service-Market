@@ -304,6 +304,8 @@ def find_tasks():
             'deadline': task.deadline,
             'user_id': f"{task.user_id:08d}",
             'employer_name': task.creator.name,
+            'status': task.status,
+            'user_type': 'Worker',
         } for task in tasks])
         
     except Exception as error:

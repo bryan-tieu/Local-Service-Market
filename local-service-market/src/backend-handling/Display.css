@@ -1,23 +1,23 @@
 /* Replace existing CSS with: */
-.users-container {
+.table-container {
     padding: 20px;
     border-radius: 8px;
     background-color: white;
   }
   
-.users-container h2 {
+.table-container h2 {
     font-size: 2rem;
     margin: 0 0 16px 0;
     color: black;
 }
-.user-cards {
+.table-cards {
     display: grid;
     grid-template-columns: repeat(2, minmax(300px, 1fr));
     gap: 20px;
     color: black;
 }
 
-.user-card {
+.content-card {
     background: white;
     border-radius: 8px;
     border: 1px black solid;
@@ -25,18 +25,12 @@
     transition: transform 0.2s;
 }
 
-.user-field {
+.info-field {
     margin-bottom: 10px;
 }
 
-.user-field strong {
+.info-field strong {
     display: inline-block;
     min-width: 100px;
     color: #555;
-}
-
-.loading, .error {
-    padding: 20px;
-    text-align: center;
-    font-size: 1.2rem;
 }

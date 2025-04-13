@@ -28,6 +28,7 @@ const Tasks = (props) => {
       }
 
       const data = await response.json();
+      console.log("Response data:", data); // Debugging line
       setTasks(data);
 
     } catch (err) {
