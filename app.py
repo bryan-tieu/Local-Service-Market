@@ -249,12 +249,13 @@ def get_all_tasks():
 def get_tasks():
     try:
         user_id = session.get('user_id')
+        print(user_id)
         user_id_str = str(user_id)
         # Check if user is authenticated
         if not user_id:
             return jsonify({'message': 'Not authenticated'}), 401
         
-        if user_id_str[0] == '1':
+        if len(user_id_str) == 8:
             tasks= Task.query.filter_by(worker_id=user_id).all()
         else:
             tasks = Task.query.filter_by(user_id=user_id).all()
