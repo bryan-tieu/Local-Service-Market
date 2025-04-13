@@ -9,7 +9,7 @@ import EmployerDashboard from './employer/Employer_Dash';
 import WorkerDashboard from './worker/Worker_Dash';
 import AccountInfo from './account/Account_Info';
 import PostJobForm from './employer/Post_Tasks';
-import Tasks from './backend-handling/Tasks';                          
+import Tasks from './components/Tasks';                          
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -83,7 +83,8 @@ function App() {
             <Route path='/worker-dashboard' element={<WorkerDashboard/>} />
             <Route path='/account' element={<AccountInfo userData={currentUser}/>} />
             <Route path='/post_tasks' element={<PostJobForm/>} />
-            <Route path='/tasks' element={<Tasks/>} />
+            <Route path='/tasks' element={<Tasks findAll={false}/>} />
+            <Route path='/find_tasks' element={<Tasks findAll={true}/>} />
           </Routes>
         </div>
       </div>

@@ -72,11 +72,11 @@ class Task(db.Model):
     deadline = db.Column(db.String(20), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     created = db.Column(db.DateTime(timezone=True), nullable=False, server_default=db.func.now())
-
     worker_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     status = db.Column(db.String(20), default='open')
     
-    user = db.relationship('User', backref='tasks')
+    creator = db.relationship('User', foreign_keys=[user_id], backref='created_tasks')
+    worker = db.relationship('User', foreign_keys=[worker_id], backref='assigned_tasks')
     
 # Create the database and tables
 with app.app_context():
@@ -216,16 +216,20 @@ def get_users():
         'user_type': user.user_type
     } for user in users])
 
+# Used to get specific tasks for employers
 @app.route('/api/tasks', methods=['GET'])
 def get_tasks():
     try:
         user_id = session.get('user_id')
-        
+        user_id_str = str(user_id)
         # Check if user is authenticated
         if not user_id:
             return jsonify({'message': 'Not authenticated'}), 401
         
-        tasks = Task.query.filter_by(user_id=user_id).all()
+        if user_id_str[0] == '1':
+            tasks= Task.query.filter_by(worker_id=user_id).all()
+        else:
+            tasks = Task.query.filter_by(user_id=user_id).all()
         pst = pytz.timezone('America/Los_Angeles')
         
         # Return tasks as JSON
@@ -238,17 +242,21 @@ def get_tasks():
             'location': task.location,
             'budget': task.budget,
             'deadline': task.deadline,
-            'user_id': f"{task.user_id:08d}"
+            'user_id': f"{task.user_id:08d}",
+            'worker_id': f"{task.worker_id:08d}" if task.worker_id else None,
+            'employer_name': task.creator.name,
         } for task in tasks])
         
     except Exception as error:
         return jsonify({'message': str(error)}), 500
 
 @app.route('/api/find_tasks', methods=['GET'])
+@login_required
 def find_tasks():
     try:
-        tasks = Task.query.all()
-        print(tasks)
+        
+        # Find all open tasks
+        tasks = Task.query.filter_by(status='open').all()
         pst = pytz.timezone('America/Los_Angeles')
         
         # Return tasks as JSON
@@ -261,7 +269,8 @@ def find_tasks():
             'location': task.location,
             'budget': task.budget,
             'deadline': task.deadline,
-            'user_id': f"{task.user_id:08d}"
+            'user_id': f"{task.user_id:08d}",
+            'employer_name': task.creator.name,
         } for task in tasks])
         
     except Exception as error:
@@ -297,7 +306,7 @@ def check_auth():
     except Exception as e:
         return jsonify({'message': str(e)}), 500
     
-@app.route('/api/posttask', methods=['POST'])
+@app.route('/api/post_task', methods=['POST'])
 def post_task():
     
     # Check if user is authenticated
@@ -332,7 +341,9 @@ def post_task():
             task_type=data['task_type'],
             location=data['location'],
             budget=data['budget'],
-            deadline=data['deadline']
+            deadline=data['deadline'],
+            status='open',
+            created=datetime.now(timezone.utc).astimezone(pytz.timezone('America/Los_Angeles'))                                  
         )
         
         db.session.add(task)
@@ -349,7 +360,9 @@ def post_task():
                 'task_type': task.task_type,
                 'location': task.location,
                 'budget': task.budget,
-                'deadline': task.deadline
+                'deadline': task.deadline,
+                'status': task.status,
+                'created': task.created.isoformat()
             }
         }), 201
         
