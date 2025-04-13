@@ -216,6 +216,34 @@ def get_users():
         'user_type': user.user_type
     } for user in users])
 
+@app.route('/api/get_all_tasks', methods=['GET'])
+def get_all_tasks():
+    try:
+        tasks = Task.query.all()
+        pst = pytz.timezone('America/Los_Angeles')
+        
+        # Return tasks as JSON
+        return jsonify([{
+            'id': task.id,
+            'date_created': task.created.astimezone(pst).isoformat() if task.created else None,
+            'task_title': task.task_title,
+            'task_description': task.task_description,
+            'task_type': task.task_type,
+            'location': task.location,
+            'status': task.status,
+            'budget': task.budget,
+            'deadline': task.deadline,
+            'user_id': f"{task.user_id:08d}",
+            'worker_id': f"{task.worker_id:08d}" if task.worker_id else None,
+            'employer_name': task.creator.name,
+            'employer_id': f"{task.user_id:08d}",
+            'worker_name': task.worker.name if task.worker else None,
+            'worker_id': f"{task.worker_id:08d}" if task.worker_id else None,
+        } for task in tasks])
+        
+    except Exception as error:
+        return jsonify({'message': str(error)}), 500
+    
 # Used to get specific tasks for employers
 @app.route('/api/tasks', methods=['GET'])
 def get_tasks():
@@ -245,11 +273,16 @@ def get_tasks():
             'user_id': f"{task.user_id:08d}",
             'worker_id': f"{task.worker_id:08d}" if task.worker_id else None,
             'employer_name': task.creator.name,
+            'worker_name': task.worker.name if task.worker else None,
+            'worker_id': f"{task.worker_id:08d}" if task.worker_id else None,
+            'status': task.status,
+            
         } for task in tasks])
         
     except Exception as error:
         return jsonify({'message': str(error)}), 500
 
+# Find tasks for workers
 @app.route('/api/find_tasks', methods=['GET'])
 @login_required
 def find_tasks():
@@ -471,6 +504,28 @@ def delete_skill(skill_id):
         
         return jsonify({'message': 'Skill deleted successfully'}), 200
         
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'message': str(e)}), 500
+    
+    
+@app.route('/api/tasks/<int:task_id>/accept', methods=['POST'])
+@login_required
+def accept_task(task_id):
+    try:
+        user_id = session.get('user_id')
+        task = Task.query.get(task_id)
+        
+        if not task:
+            return jsonify({'message': 'Task not found'}), 404
+        if task.status != 'open':
+            return jsonify({'message': 'Task is no longer available'}), 400
+        
+        task.worker_id = user_id
+        task.status = 'assigned'
+        db.session.commit()
+        
+        return jsonify({'message': 'Task accepted successfully'}), 200
     except Exception as e:
         db.session.rollback()
         return jsonify({'message': str(e)}), 500
