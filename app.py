@@ -73,7 +73,7 @@ class Task(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     created = db.Column(db.DateTime(timezone=True), nullable=False, server_default=db.func.now())
     worker_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
-    status = db.Column(db.String(20), default='open')
+    status = db.Column(db.String(20), default='Open')
     
     creator = db.relationship('User', foreign_keys=[user_id], backref='created_tasks')
     worker = db.relationship('User', foreign_keys=[worker_id], backref='assigned_tasks')
@@ -290,7 +290,7 @@ def find_tasks():
     try:
         
         # Find all open tasks
-        tasks = Task.query.filter_by(status='open').all()
+        tasks = Task.query.filter_by(status='Open').all()
         pst = pytz.timezone('America/Los_Angeles')
         
         # Return tasks as JSON
@@ -378,7 +378,7 @@ def post_task():
             location=data['location'],
             budget=data['budget'],
             deadline=data['deadline'],
-            status='open',
+            status='Open',
             created=datetime.now(timezone.utc).astimezone(pytz.timezone('America/Los_Angeles'))                                  
         )
         
@@ -521,11 +521,11 @@ def accept_task(task_id):
         
         if not task:
             return jsonify({'message': 'Task not found'}), 404
-        if task.status != 'open':
+        if task.status != 'Open':
             return jsonify({'message': 'Task is no longer available'}), 400
         
         task.worker_id = user_id
-        task.status = 'assigned'
+        task.status = 'Assigned'
         db.session.commit()
         
         return jsonify({'message': 'Task accepted successfully'}), 200

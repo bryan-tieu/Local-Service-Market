@@ -27,13 +27,15 @@ const Signup = () => {
     setError(''); 
   }, []);
 
-  // Handle phone number changes
-  const handlePhoneChange = (value) => {
+  // Handle phone number change
+  const handlePhoneChange = useCallback((value) => {
+    setPhoneNumber(value);
     setFormData(prev => ({
       ...prev,
       phoneNumber: value
     }));
-  }
+    setError('');
+  }, []);
 
   // Handle form submission
   const handleSubmit = async (e) => {

@@ -105,13 +105,13 @@ const PosttaskForm = () => {
               onChange={handleChange}
             >
               <option value="">Select a Category</option>
-              <option value="carpentry">Carpentry</option>
-              <option value="plumbing">Plumbing</option>
-              <option value="electrical">Electrical</option>
-              <option value="cleaning">Cleaning</option>
-              <option value="gardening">Gardening</option>
-              <option value="painting">Painting</option>
-              <option value="other">Other</option>
+              <option value="Carpentry">Carpentry</option>
+              <option value="Plumbing">Plumbing</option>
+              <option value="Electrical">Electrical</option>
+              <option value="Cleaning">Cleaning</option>
+              <option value="Gardening">Gardening</option>
+              <option value="Painting">Painting</option>
+              <option value="O11ther">Other</option>
             </select>
           </div>
           

@@ -127,7 +127,8 @@ const Tasks = (props) => {
               </div>
               {expandedTaskId === task.id && (
                 <div className="task-details">
-                  <p><strong>Employer Name:</strong> {task.employer_name}</p>
+                  <p><strong>Employer:</strong> {task.employer_name}</p>
+                  <p><strong>Employer ID:</strong> {task.user_id}</p>
                   <p><strong>Created:</strong> {task.date_created ? new Date(task.date_created).toLocaleString('en-US', {
                     timeZone: 'America/Los_Angeles',
                     year: 'numeric',
@@ -144,8 +145,7 @@ const Tasks = (props) => {
                   <p><strong>Type:</strong> {task.task_type}</p>
                   <p><strong>Location:</strong> {task.location}</p>
                   <p><strong>Budget:</strong> ${task.budget.toFixed(2)}</p>
-                  <p><strong>User ID:</strong> {task.user_id}</p>
-                  {userType === 'Worker' && task.status === 'open' && (
+                  {userType === 'Worker' && task.status === 'Open' && (
                     <button
                       onClick={handleAcceptJob}
                       className="apply-button"

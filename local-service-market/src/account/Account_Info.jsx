@@ -57,9 +57,8 @@ const AccountInfo = ({ userData }) => {
       return;
     }
 
-    console.log('Payload:', payload); // Debugging line
     try {
-      const response = await fetch('/api/skills', {
+      const response = await fetch('http://localhost:5000/api/skills', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -70,6 +69,7 @@ const AccountInfo = ({ userData }) => {
         credentials: 'include'
       });
       
+      console.log('Response:', response); // Debugging line
       if (response.ok) {
         const addedSkill = await response.json();
         setSkills([...skills, addedSkill.skill]);
