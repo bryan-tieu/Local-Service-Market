@@ -83,6 +83,7 @@ with app.app_context():
     db.create_all()
 
 # Decorators
+# Requires users to be logged in
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -95,7 +96,6 @@ def login_required(f):
 # Signup Route
 @app.route('/api/signup', methods=['POST'])
 def signup():
-    
     try:
         data = request.get_json()
         
@@ -150,7 +150,6 @@ def signup():
 # Login Route
 @app.route('/api/login', methods=['POST'])
 def login():
-    
     try:
         data = request.get_json()
 
@@ -165,7 +164,8 @@ def login():
         
         # Find user by Email
         user = User.query.filter_by(email=userEmail).first()
-        print(user)
+        print(user) # DEBUGGING
+        
         # Check if user exists
         if not user:
             return jsonify({'message': 'User not found'}), 404
@@ -216,6 +216,7 @@ def get_users():
         'user_type': user.user_type
     } for user in users])
 
+# Fetch all tasks in DB, Used as a debugger
 @app.route('/api/get_all_tasks', methods=['GET'])
 def get_all_tasks():
     try:
@@ -249,12 +250,15 @@ def get_all_tasks():
 def get_tasks():
     try:
         user_id = session.get('user_id')
-        print(user_id)
+        print(user_id) # DEBUGGING
         user_id_str = str(user_id)
+        
         # Check if user is authenticated
         if not user_id:
             return jsonify({'message': 'Not authenticated'}), 401
         
+        # Checks for employer/worker (workers will have 8 digits while employers have 0 because of 
+        # leading zero in employers ID)
         if len(user_id_str) == 8:
             tasks= Task.query.filter_by(worker_id=user_id).all()
         else:
@@ -269,6 +273,7 @@ def get_tasks():
             'task_description': task.task_description,
             'task_type': task.task_type,
             'location': task.location,
+            'status': task.status,
             'budget': task.budget,
             'deadline': task.deadline,
             'user_id': f"{task.user_id:08d}",
@@ -276,7 +281,6 @@ def get_tasks():
             'employer_name': task.creator.name,
             'worker_name': task.worker.name if task.worker else None,
             'worker_id': f"{task.worker_id:08d}" if task.worker_id else None,
-            'status': task.status,
             
         } for task in tasks])
         
@@ -312,6 +316,7 @@ def find_tasks():
     except Exception as error:
         return jsonify({'message': str(error)}), 500
     
+# Authentication checking, check if user is logged in
 @app.route('/api/check-auth', methods=['GET'])
 @login_required
 def check_auth():
@@ -342,6 +347,7 @@ def check_auth():
     except Exception as e:
         return jsonify({'message': str(e)}), 500
     
+# Post Task Feature for employers
 @app.route('/api/post_task', methods=['POST'])
 def post_task():
     
@@ -376,9 +382,9 @@ def post_task():
             task_description=data['task_description'],
             task_type=data['task_type'],
             location=data['location'],
+            status='Open',
             budget=data['budget'],
             deadline=data['deadline'],
-            status='Open',
             created=datetime.now(timezone.utc).astimezone(pytz.timezone('America/Los_Angeles'))                                  
         )
         
@@ -408,6 +414,7 @@ def post_task():
         db.session.rollback() 
         return jsonify({'message': str(error)}), 500
 
+# Logout Feature 
 @app.route('/api/logout', methods=['POST'])
 def logout():
     try:
@@ -511,7 +518,7 @@ def delete_skill(skill_id):
         db.session.rollback()
         return jsonify({'message': str(e)}), 500
     
-    
+# Workers Flow for accepting a task
 @app.route('/api/tasks/<int:task_id>/accept', methods=['POST'])
 @login_required
 def accept_task(task_id):
@@ -519,16 +526,19 @@ def accept_task(task_id):
         user_id = session.get('user_id')
         task = Task.query.get(task_id)
         
+        # Check if task is still available/not taken
         if not task:
             return jsonify({'message': 'Task not found'}), 404
         if task.status != 'Open':
             return jsonify({'message': 'Task is no longer available'}), 400
         
+        # Assign the worker to the task
         task.worker_id = user_id
         task.status = 'Assigned'
         db.session.commit()
         
         return jsonify({'message': 'Task accepted successfully'}), 200
+    
     except Exception as e:
         db.session.rollback()
         return jsonify({'message': str(e)}), 500
