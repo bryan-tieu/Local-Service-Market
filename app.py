@@ -77,6 +77,15 @@ class Task(db.Model):
     
     creator = db.relationship('User', foreign_keys=[user_id], backref='created_tasks')
     worker = db.relationship('User', foreign_keys=[worker_id], backref='assigned_tasks')
+
+class Transaction(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    sender_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    receiver_id = db.Column(db.Integer, db.ForeginKey('user.id'), nullable=False)
+    task_id = db.Column(db.Float, nullable=False)
+    amount = db.Column(db.Float, nullable=False)
+    timestamp = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
+    status = db.Column(db.String(20), nullable=False, default='Pending')
     
 # Create the database and tables
 with app.app_context():
