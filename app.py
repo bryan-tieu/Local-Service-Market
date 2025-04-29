@@ -86,7 +86,7 @@ class Task(db.Model):
 class Transaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     sender_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    receiver_id = db.Column(db.Integer, db.ForeginKey('user.id'), nullable=False)
+    receiver_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     task_id = db.Column(db.Integer, db.ForeginKey('task.id') nullable=False)
     amount = db.Column(db.Float, nullable=False)
     description = db.Column(db.String(255))
