@@ -96,11 +96,29 @@ class Transaction(db.Model):
     #sender = db.relationships()
     #receiver = db.relationships()
     #task = db.relationships()
+
+class Message(db.Model):
+    __tablename__ = 'message'
+    id = db.Column(db.Integer, primary_key=True)
     
+    # store just the IDs in the DB
+    sender_id   = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    receiver_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    
+    text      = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime(timezone=True),
+                          nullable=False,
+                          server_default=db.func.now())
+
+    # relationships let you easily pull in the User object
+    sender   = db.relationship('User', foreign_keys=[sender_id], backref='sent_messages')
+    receiver = db.relationship('User', foreign_keys=[receiver_id], backref='received_messages')
+
+
 # Create the database and tables
 with app.app_context():
     db.create_all()
-
+    
 # Decorators
 # Requires users to be logged in
 def login_required(f):
@@ -564,3 +582,47 @@ def accept_task(task_id):
     
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
+
+# Message another account
+@app.route('/api/messages', methods=['GET'])
+@login_required
+def get_messages():
+    me = session['user_id']
+    # fetch any conversation involving me
+    msgs = Message.query.filter(
+        (Message.sender_id   == me) |
+        (Message.receiver_id == me)
+    ).order_by(Message.timestamp).all()
+
+    return jsonify([{
+        'id'         : m.id,
+        'text'       : m.text,
+        'timestamp'  : m.timestamp.isoformat(),
+        'sender_id'  : m.sender_id,          # internal reference
+        'sender_name': m.sender.name,        # for display
+        'receiver_id': m.receiver_id,
+        'receiver_name': m.receiver.name
+    } for m in msgs])
+
+
+@app.route('/api/messages', methods=['POST'])
+@login_required
+def post_message():
+    data = request.get_json()
+    sender_id   = session['user_id']
+    receiver_id = data.get('receiver_id')
+    text        = data.get('text', '').strip()
+    if not receiver_id or not text:
+        return jsonify({'message':'receiver_id and text required'}), 400
+
+    m = Message(sender_id=sender_id, receiver_id=receiver_id, text=text)
+    db.session.add(m)
+    db.session.commit()
+
+    return jsonify({
+        'id'          : m.id,
+        'text'        : m.text,
+        'timestamp'   : m.timestamp.isoformat(),
+        'sender_id'   : m.sender_id,
+        'sender_name' : m.sender.name
+    }), 201
