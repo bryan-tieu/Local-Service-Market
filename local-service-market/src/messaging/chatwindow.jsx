@@ -24,7 +24,7 @@ function ChatWindow() {
 
   const fetchMessages = async () => {
     const res = await fetch('http://localhost:5000/api/messages', {
-      method: 'GET',          // explicit, but not strictly required
+      method: 'GET',
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json'
@@ -41,15 +41,15 @@ function ChatWindow() {
 
     await fetch('http://localhost:5000/api/messages', {
       method: 'POST',
-      credentials: 'include',               // <-- send the session cookie
+      credentials: 'include', // <-- send the session cookie
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
-        receiver_id: receiverId,            // <-- backend expects receiver_id
+        receiver_id: receiverId, // <-- backend expects receiver_id
         text: text.trim() 
       }),
     });
     setText('');
-    fetchMessages();                        // reload
+    fetchMessages(); // reload
   };
 
   return (
