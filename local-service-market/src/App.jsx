@@ -11,6 +11,7 @@ import AccountInfo from './account/Account_Info';
 import PostJobForm from './employer/Post_Tasks';
 import Tasks from './components/Tasks';                          
 import AllTasks from './backend-handling/All_Tasks';
+import ChatWindow from './messaging/chatwindow';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -87,6 +88,7 @@ function App() {
             <Route path='/tasks' element={<Tasks findAll={false}/>} />
             <Route path='/find_tasks' element={<Tasks findAll={true}/>} />
             <Route path='/get_all_tasks' element={<AllTasks/>} />
+            <Route path='/messages' element={<ChatWindow />} />
           </Routes>
         </div>
       </div>
