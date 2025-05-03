@@ -29,9 +29,9 @@ app.config.update(
 # CORS Settings
 CORS(app, 
     supports_credentials=True,
-    origins=["http://localhost:5174", "http://localhost:5173"],
-    allow_headers=["Content-Type", "Authorization", "credentials"],
-    methods=["GET", "POST", "PUT", "DELETE"],
+    origins=["http://localhost:5174", "http://localhost:5173", "http://localhost:5000"],
+    allow_headers=["Content-Type", "Authorization", "credentials", "Accept"],
+    methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     expose_headers=["Set-Cookie"]
 )
 
@@ -80,8 +80,8 @@ class Task(db.Model):
     worker_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     status = db.Column(db.String(20), default='Open')
     
-   # creator = db.relationship('User', foreign_keys=[user_id], backref='created_tasks')
-   # worker = db.relationship('User', foreign_keys=[worker_id], backref='assigned_tasks')
+    creator = db.relationship('User', foreign_keys=[user_id], backref='created_tasks')
+    worker = db.relationship('User', foreign_keys=[worker_id], backref='assigned_tasks')
 
 class Transaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -285,7 +285,9 @@ def get_all_tasks():
 # Used to get specific tasks for employers
 @app.route('/api/tasks', methods=['GET'])
 def get_tasks():
+    
     try:
+        print(f"Session data: {dict(session)}") # DEBUGGING
         user_id = session.get('user_id')
         print(user_id) # DEBUGGING
         user_id_str = str(user_id)
@@ -580,8 +582,6 @@ def accept_task(task_id):
         db.session.rollback()
         return jsonify({'message': str(e)}), 500
     
-if __name__ == '__main__':
-    app.run(debug=True, port=5000)
 
 # Message another account
 @app.route('/api/messages', methods=['GET'])
@@ -626,3 +626,6 @@ def post_message():
         'sender_id'   : m.sender_id,
         'sender_name' : m.sender.name
     }), 201
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5000)

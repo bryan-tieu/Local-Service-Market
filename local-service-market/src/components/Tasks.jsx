@@ -11,19 +11,27 @@ const Tasks = (props) => {
 
   const fetchTasks = async () => {
     try {
+
+      console.log("Fetching tasks..."); // Debugging line
+
       const endpoint = props.findAll
       ? 'http://localhost:5000/api/find_tasks'
       : 'http://localhost:5000/api/tasks';
+
+      console.log("Fetching tasks from:", endpoint); // Debugging line
 
       const response = await fetch(endpoint, {
         credentials: 'include',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
-        }
+        },
+        mode: 'cors'
       });
       
       if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Server error:", errorData); // Debugging line
         throw new Error('Failed to fetch tasks');
       }
 
