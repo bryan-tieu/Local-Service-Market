@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-
+import './Chat_Window.css'; // Assuming you have a CSS file for styling
 function ChatWindow() {
   const [users, setUsers] = useState([]);
   const [messages, setMessages] = useState([]);
   const [receiverId, setReceiverId] = useState('');
   const [text, setText] = useState('');
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
   // Load users and messages when we mount
   useEffect(() => {
@@ -53,47 +55,70 @@ function ChatWindow() {
   };
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h2>Messaging</h2>
+    <div className="chat-container main-content">
+      <div className="chat-form-container">
+        <h2 className="chat-title">Messaging</h2>
+        <hr className="title-divider" />
 
-      <label>
-        Send To:
-        <select 
-          value={receiverId} 
-          onChange={e => setReceiverId(e.target.value)}
-        >
-          {users.map(u => (
-            <option key={u.id} value={u.id}>
-              {u.name} ({u.id})
-            </option>
-          ))}
-        </select>
-      </label>
+        {error && <div className="error-message">{error}</div>}
+        {success && <div className="success-message">{success}</div>}
 
-      <div>
-        <textarea
-          value={text}
-          onChange={e => setText(e.target.value)}
-          placeholder="Write a message..."
-          rows="4"
-          cols="40"
-        />
+        <div className="chat-form">
+          <div className="form-group">
+            <label htmlFor="receiver-select">Send To:</label>
+            <select 
+              id="receiver-select"
+              value={receiverId} 
+              onChange={e => setReceiverId(e.target.value)}
+              className="form-control"
+            >
+              {users.map(u => (
+                <option key={u.id} value={u.id}>
+                  {u.name} ({u.id})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="message-text">Message:</label>
+            <textarea
+              id="message-text"
+              value={text}
+              onChange={e => setText(e.target.value)}
+              placeholder="Write a message..."
+              className="form-control"
+            />
+          </div>
+
+          <div className="form-group">
+            <button 
+              onClick={sendMessage} 
+              className="chat-button"
+              disabled={!text.trim() || !receiverId}
+            >
+              Send Message
+            </button>
+          </div>
+
+          <div className="form-group">
+            <h3>Message History</h3>
+            <ul className="message-history">
+              {messages.map(msg => (
+                <li key={msg.id} className="message-item">
+                  <div className="message-header">
+                    {msg.sender_name} ➝ {msg.receiver_name}
+                  </div>
+                  <div className="message-content">{msg.text}</div>
+                  <div className="message-timestamp">
+                    {new Date(msg.timestamp).toLocaleString()}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
       </div>
-
-      <button onClick={sendMessage}>Send</button>
-
-      <h3>Messages</h3>
-      <ul>
-        {messages.map(msg => (
-          <li key={msg.id}>
-            <strong>
-              {msg.sender_name} ➝ {msg.receiver_name}
-            </strong>
-            : {msg.text}{' '}
-            <em>({new Date(msg.timestamp).toLocaleString()})</em>
-          </li>
-        ))}
-      </ul>
     </div>
   );
 }
