@@ -8,19 +8,23 @@ const Tasks = (props) => {
   const [expandedTaskId, setExpandedTaskId] = useState(null);
   const [selectedTask, setSelectedTask] = useState(null);
   const [userType, setUserType] = useState(null);
+  const [statusFilter, setStatusFilter] = useState('All'); // New state for status filter
 
   const fetchTasks = async () => {
     try {
 
-      console.log("Fetching tasks..."); // Debugging line
-
-      const endpoint = props.findAll
+      let endpoint = props.findAll
       ? 'http://localhost:5000/api/find_tasks'
       : 'http://localhost:5000/api/tasks';
 
-      console.log("Fetching tasks from:", endpoint); // Debugging line
+      const url = new URL(endpoint);
 
-      const response = await fetch(endpoint, {
+      if (statusFilter !== 'All') {
+        url.searchParams.append('status', statusFilter);
+      }
+      console.log("Fetching tasks from:", url.toString()); // Debugging line
+
+      const response = await fetch(url.toString(), {
         credentials: 'include',
         headers: {
           'Accept': 'application/json',
@@ -67,7 +71,7 @@ const Tasks = (props) => {
   useEffect(() => {
     fetchTasks();
     fetchUserData();
-  }, [props.findAll]);
+  }, [props.findAll, statusFilter]);
 
   const handleAcceptJob = async () => {
     if (!selectedTask) return;
@@ -81,6 +85,22 @@ const Tasks = (props) => {
     });
     } catch (error) {
       console.error('Error accepting job:', error);
+    }
+    fetchTasks();
+  };
+
+  const handleCompleteJob = async () => {
+    if (!selectedTask) return;
+    try {
+      const response = await fetch(`http://localhost:5000/api/tasks/${selectedTask.id}/complete`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+      });
+    } catch (error) {
+      console.error('Error completing job:', error);
     }
     fetchTasks();
   };
@@ -121,7 +141,19 @@ const Tasks = (props) => {
   return (
     <div className="main-content">
       <div className="tasks-container">
-        <h2>All Tasks</h2>
+        <h2>My Tasks</h2>
+        <div className="filter-container">
+        <div className="task-filters">
+              <select 
+                value={statusFilter} 
+                onChange={(e) => setStatusFilter(e.target.value)}
+              >
+                <option value="All">All Tasks</option>
+                <option value="Completed">Completed</option>
+                <option value="Incomplete">Incomplete</option>
+              </select>
+          </div>
+        </div>
         <div className="tasks-list">
           {tasks.map((task) => (
             <div 
@@ -159,6 +191,12 @@ const Tasks = (props) => {
                       className="apply-button"
                       >Accept</button>
               )}
+                  {userType === 'Worker' && task.status === 'Assigned' && (
+                    <button
+                      onClick={handleCompleteJob}
+                      className="complete-button"
+                      >Complete</button>
+                  ) }
                 </div>
               )}
             </div>
