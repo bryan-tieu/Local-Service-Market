@@ -44,6 +44,8 @@ const Login = (props) => {
 
       // Handle failed login
       if (!response.ok) {
+        const errorData = await response.json();
+        console.error('ERROR:', errorData);
         throw new Error(data.message || 'Login failed!');
       }
 

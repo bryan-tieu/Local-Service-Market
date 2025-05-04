@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import './Chat_Window.css'; // Assuming you have a CSS file for styling
+import './Chat_Window.css'; 
+
 function ChatWindow() {
   const [users, setUsers] = useState([]);
   const [messages, setMessages] = useState([]);
