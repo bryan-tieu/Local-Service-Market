@@ -142,18 +142,21 @@ const Tasks = (props) => {
     <div className="main-content">
       <div className="tasks-container">
         <h2>My Tasks</h2>
-        <div className="filter-container">
-          <div className="task-filters">
-              <select 
-                value={statusFilter} 
-                onChange={(e) => setStatusFilter(e.target.value)}
-              >
-                <option value="All">All Tasks</option>
-                <option value="Completed">Completed</option>
-                <option value="Incomplete">Incomplete</option>
-              </select>
+        {!props.findAll && (
+          <div className="filter-container">
+            <div className="task-filters">
+                <select 
+                  value={statusFilter} 
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                >
+                  <option value="All">All Tasks</option>
+                  <option value="Completed">Completed</option>
+                  <option value="Incomplete">Incomplete</option>
+                </select>
+            </div>
           </div>
-        </div>
+        )}
+        
         <div className="tasks-list">
           {tasks.map((task) => (
             <div 
