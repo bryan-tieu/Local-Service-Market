@@ -25,7 +25,7 @@ const Navbar = ({ isAuthenticated, handleLogout, userType }) => {
       <div className="navbar-container">
         {/* Logo on the left */}
         <Link to="/" className="navbar-logo">
-          MyApp
+          Local Service Market
         </Link>
 
         {/* Navigation buttons on the right */}
