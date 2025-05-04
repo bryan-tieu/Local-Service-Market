@@ -11,8 +11,10 @@
   },
   "dependencies": {
     "date-fns": "^4.1.0",
+    "leaflet": "^1.9.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-leaflet": "^5.0.0",
     "react-phone-number-input": "^3.4.12",
     "react-router-dom": "^7.4.1"
   },
