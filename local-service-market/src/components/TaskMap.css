@@ -1,0 +1,86 @@
+.map-container {
+  height: 600px;
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: #333;
+  z-index: 1000;
+}
+
+.error-message {
+  color: red;
+  padding: 20px;
+  text-align: center;
+}
+
+.loading-message {
+  text-align: center;
+  padding: 20px;
+}
+
+.task-popup {
+  min-width: 250px;
+  max-width: 300px;
+}
+
+.task-info {
+  margin: 10px 0;
+  font-size: 0.9rem;
+}
+
+.task-info p {
+  margin: 5px 0;
+  line-height: 1.4;
+}
+
+.task-info strong {
+  color: #333;
+}
+
+.task-button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+  width: 100%;
+  font-weight: bold;
+}
+
+.task-button:hover {
+  background-color: #45a049;
+}
+
+.leaflet-popup-content {
+  margin: 0;
+}
+
+.leaflet-popup-content h3 {
+  margin: 0 0 10px 0;
+  color: #333;
+  font-size: 1.2rem;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 5px;
+}
+
+.leaflet-popup-content p {
+  margin: 5px 0;
+  color: #666;
+} 

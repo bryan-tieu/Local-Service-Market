@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { parse, format } from 'date-fns';
+import TaskMap from './TaskMap';
 import './Tasks.css';
 
 const Tasks = (props) => {
@@ -14,8 +15,8 @@ const Tasks = (props) => {
     try {
 
       let endpoint = props.findAll
-      ? 'http://localhost:5000/api/find_tasks'
-      : 'http://localhost:5000/api/tasks';
+      ? 'http://localhost:5001/api/find_tasks'
+      : 'http://localhost:5001/api/tasks';
 
       const url = new URL(endpoint);
 
@@ -32,7 +33,7 @@ const Tasks = (props) => {
         },
         mode: 'cors'
       });
-      
+
       if (!response.ok) {
         const errorData = await response.json();
         console.error("Server error:", errorData); // Debugging line
@@ -50,7 +51,7 @@ const Tasks = (props) => {
 
   const fetchUserData = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/check-auth', {
+      const response = await fetch('http://localhost:5001/api/check-auth', {
         credentials: 'include',
         headers: {
           'Accept': 'application/json',
@@ -76,7 +77,7 @@ const Tasks = (props) => {
   const handleAcceptJob = async () => {
     if (!selectedTask) return;
     try {
-      const response = await fetch(`http://localhost:5000/api/tasks/${selectedTask.id}/accept`, {
+      const response = await fetch(`http://localhost:5001/api/tasks/${selectedTask.id}/accept`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -92,7 +93,7 @@ const Tasks = (props) => {
   const handleCompleteJob = async () => {
     if (!selectedTask) return;
     try {
-      const response = await fetch(`http://localhost:5000/api/tasks/${selectedTask.id}/complete`, {
+      const response = await fetch(`http://localhost:5001/api/tasks/${selectedTask.id}/complete`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -112,7 +113,7 @@ const Tasks = (props) => {
 
   const formatDeadline = (dateString) => {
     if (!dateString) return 'N/A';
-    
+
     try {
       // Try multiple date formats
       const possibleFormats = [
@@ -121,15 +122,15 @@ const Tasks = (props) => {
         'dd/MM/yyyy',
         'yyyy-MM-dd'
       ];
-      
+
       let parsedDate;
       for (const fmt of possibleFormats) {
         parsedDate = parse(dateString, fmt, new Date());
         if (!isNaN(parsedDate.getTime())) break;
       }
-      
+
       if (isNaN(parsedDate.getTime())) return dateString;
-      
+
       return format(parsedDate, 'MMMM d, yyyy');
     } catch {
       return dateString;
@@ -145,8 +146,8 @@ const Tasks = (props) => {
         {!props.findAll && (
           <div className="filter-container">
             <div className="task-filters">
-                <select 
-                  value={statusFilter} 
+                <select
+                  value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
                 >
                   <option value="All">All Tasks</option>
@@ -156,11 +157,11 @@ const Tasks = (props) => {
             </div>
           </div>
         )}
-        
+
         <div className="tasks-list">
           {tasks.map((task) => (
-            <div 
-              key={task.id} 
+            <div
+              key={task.id}
               className={`task-card ${expandedTaskId === task.id ? 'expanded' : ''}`}
               onClick={() => handleTaskClick(task.id)}
             >
@@ -205,6 +206,10 @@ const Tasks = (props) => {
             </div>
           ))}
         </div>
+      </div>
+      <div className="map-section">
+        <h2>Tasks Map</h2>
+        <TaskMap />
       </div>
     </div>
   );
