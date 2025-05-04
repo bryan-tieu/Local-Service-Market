@@ -9,7 +9,7 @@ const WorkerDashboard = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('http://localhost:5001/api/check-auth', {
+        const response = await fetch('http://localhost:5000/api/check-auth', {
           credentials: 'include',
         });
 

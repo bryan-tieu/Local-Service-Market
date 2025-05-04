@@ -74,7 +74,7 @@ const TaskMap = () => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await fetch('http://localhost:5001/api/find_tasks', {
+        const response = await fetch('http://localhost:5000/api/find_tasks', {
           credentials: 'include',
           headers: {
             'Accept': 'application/json',
@@ -99,7 +99,7 @@ const TaskMap = () => {
 
   const handleAcceptJob = async (taskId) => {
     try {
-      const response = await fetch(`http://localhost:5001/api/tasks/${taskId}/accept`, {
+      const response = await fetch(`http://localhost:5000/api/tasks/${taskId}/accept`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -110,7 +110,7 @@ const TaskMap = () => {
       if (response.ok) {
         const fetchTasks = async () => {
           try {
-            const response = await fetch('http://localhost:5001/api/find_tasks', {
+            const response = await fetch('http://localhost:5000/api/find_tasks', {
               credentials: 'include',
               headers: {
                 'Accept': 'application/json',

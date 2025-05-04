@@ -15,8 +15,8 @@ const Tasks = (props) => {
     try {
 
       let endpoint = props.findAll
-      ? 'http://localhost:5001/api/find_tasks'
-      : 'http://localhost:5001/api/tasks';
+      ? 'http://localhost:5000/api/find_tasks'
+      : 'http://localhost:5000/api/tasks';
 
       const url = new URL(endpoint);
 
@@ -51,7 +51,7 @@ const Tasks = (props) => {
 
   const fetchUserData = async () => {
     try {
-      const response = await fetch('http://localhost:5001/api/check-auth', {
+      const response = await fetch('http://localhost:5000/api/check-auth', {
         credentials: 'include',
         headers: {
           'Accept': 'application/json',
@@ -77,7 +77,7 @@ const Tasks = (props) => {
   const handleAcceptJob = async () => {
     if (!selectedTask) return;
     try {
-      const response = await fetch(`http://localhost:5001/api/tasks/${selectedTask.id}/accept`, {
+      const response = await fetch(`http://localhost:5000/api/tasks/${selectedTask.id}/accept`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -93,7 +93,7 @@ const Tasks = (props) => {
   const handleCompleteJob = async () => {
     if (!selectedTask) return;
     try {
-      const response = await fetch(`http://localhost:5001/api/tasks/${selectedTask.id}/complete`, {
+      const response = await fetch(`http://localhost:5000/api/tasks/${selectedTask.id}/complete`, {
         method: 'POST',
         credentials: 'include',
         headers: {
