@@ -621,11 +621,19 @@ def complete_task(task_id):
 @login_required
 def get_messages():
     me = session['user_id']
-    # fetch any conversation involving me
-    msgs = Message.query.filter(
-        (Message.sender_id   == me) |
-        (Message.receiver_id == me)
-    ).order_by(Message.timestamp).all()
+    user_filter = request.args.get('user')
+    print("Now filtering by user:", user_filter)  # DEBUGGING
+    if user_filter != 'All':
+        msgs = Message.query.filter(
+            ((Message.sender_id == me) & (Message.receiver_id == user_filter)) |
+            ((Message.sender_id == user_filter) & (Message.receiver_id == me))
+        ).order_by(Message.timestamp).all()
+        
+    elif user_filter == 'All':
+        msgs = Message.query.filter(
+            (Message.sender_id   == me) |
+            (Message.receiver_id == me)
+        ).order_by(Message.timestamp).all()
 
     return jsonify([{
         'id'         : m.id,

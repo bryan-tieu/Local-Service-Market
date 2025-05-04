@@ -143,7 +143,7 @@ const Tasks = (props) => {
       <div className="tasks-container">
         <h2>My Tasks</h2>
         <div className="filter-container">
-        <div className="task-filters">
+          <div className="task-filters">
               <select 
                 value={statusFilter} 
                 onChange={(e) => setStatusFilter(e.target.value)}

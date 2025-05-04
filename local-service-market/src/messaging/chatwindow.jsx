@@ -7,17 +7,19 @@ function ChatWindow() {
   const [text, setText] = useState('');
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const [userFilter, setUserFilter] = useState('All');
 
   // Load users and messages when we mount
   useEffect(() => {
     fetchUsers();
     fetchMessages();
-  }, []);
+  }, [userFilter]);
 
   const fetchUsers = async () => {
     const res = await fetch('http://localhost:5000/api/users', {
       credentials: 'include'
     });
+
     if (!res.ok) throw new Error('Could not load users');
     const data = await res.json();
     setUsers(data);
@@ -25,7 +27,11 @@ function ChatWindow() {
   };
 
   const fetchMessages = async () => {
-    const res = await fetch('http://localhost:5000/api/messages', {
+    const url = userFilter !== 'all' 
+        ? `http://localhost:5000/api/messages?user=${userFilter}`
+        : 'http://localhost:5000/api/messages';
+        
+    const res = await fetch(url, {
       method: 'GET',
       credentials: 'include',
       headers: {
@@ -57,7 +63,7 @@ function ChatWindow() {
   return (
     <div className="chat-container main-content">
       <div className="chat-form-container">
-        <h2 className="chat-title">Messaging</h2>
+        <h2 className="chat-title">Messages</h2>
         <hr className="title-divider" />
 
         {error && <div className="error-message">{error}</div>}
@@ -102,7 +108,22 @@ function ChatWindow() {
           </div>
 
           <div className="form-group">
-            <h3>Message History</h3>
+            <h3 style={{ color: '#000' }}>Message History</h3>
+            <div className="filter-container">
+              <div className="task-filters">
+                <select
+                  value={userFilter} 
+                  onChange={e => setUserFilter(e.target.value)}
+                >
+                  <option value="All">All Users</option>
+                  {users.map(u => (
+                    <option key={u.id} value={u.id}>
+                      {u.name} ({u.id})
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
             <ul className="message-history">
               {messages.map(msg => (
                 <li key={msg.id} className="message-item">
