@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import "./Post_Tasks.css";
+import { set } from "date-fns";
 
 const PosttaskForm = () => {
   const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   // Form data state
   const [formData, setFormData] = useState({
@@ -23,6 +25,7 @@ const PosttaskForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setSuccessMessage('');
 
     // Validate form data
     try {
@@ -44,6 +47,7 @@ const PosttaskForm = () => {
       }
 
       console.log('Task posted successfully:', data);
+      setSuccessMessage('Task posted successfully!');
       setError('');
 
       // Reset form data
@@ -55,6 +59,11 @@ const PosttaskForm = () => {
         budget: "",
         deadline: ""
       });
+
+      setTimeout(() => {
+        setSuccessMessage(''); // Clear success message after 5 seconds
+      }, 5000);
+      
     } catch (error) {
       console.error('Error posting task:', error);
       setError('Error posting task. Please try again later.');
@@ -68,6 +77,19 @@ const PosttaskForm = () => {
       <div className="post-task-form-container">
         <h2 id="post-title">Post a Task</h2>
         <hr className="title-divider" />
+        {/* Display success message if it exists */}
+        {successMessage && (
+          <div className="success-message">
+            {successMessage}
+          </div>
+        )}
+        
+        {/* Display error message if it exists */}
+        {error && (
+          <div className="error-message">
+            {error}
+          </div>
+        )}
         <form onSubmit={handleSubmit} className="post-task-form">
           <div className="form-group">
             <label htmlFor="task_title">Task Title</label>
