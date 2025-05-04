@@ -5,8 +5,8 @@ const AccountInfo = ({ userData }) => {
   const [skills, setSkills] = useState([]);
   const [newSkill, setNewSkill] = useState({
     skill_name: '',
-    proficiency: 5,  // Default value
-    years_of_experience: 1
+    proficiency: '',  // Default value
+    years_of_experience: "Years" // Default value
   });
 
   // Function to format phone numbers
@@ -150,7 +150,7 @@ const AccountInfo = ({ userData }) => {
                   value={newSkill.proficiency}
                   onChange={(e) => setNewSkill({...newSkill, proficiency: parseInt(e.target.value)})}
                 >
-                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
+                  {["Proficiency",1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
                     <option key={num} value={num}>{num}</option>
                   ))}
                 </select>
