@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { parse, format } from 'date-fns';
-import TaskMap from './TaskMap';
+import TaskMap from '../worker/TaskMap';
 import './Tasks.css';
 
 const Tasks = (props) => {
@@ -9,7 +10,8 @@ const Tasks = (props) => {
   const [expandedTaskId, setExpandedTaskId] = useState(null);
   const [selectedTask, setSelectedTask] = useState(null);
   const [userType, setUserType] = useState(null);
-  const [statusFilter, setStatusFilter] = useState('All'); // New state for status filter
+  const [statusFilter, setStatusFilter] = useState('All'); 
+  const location = useLocation();
 
   const fetchTasks = async () => {
     try {
@@ -206,11 +208,15 @@ const Tasks = (props) => {
             </div>
           ))}
         </div>
-      </div>
-      <div className="map-section">
-        <h2>Tasks Map</h2>
-        <TaskMap />
-      </div>
+        </div>
+        {userType === 'Worker' && location.pathname === '/find_tasks' && (
+          <div className="map-section">
+          <div className="map-header">
+            <h2>Available Tasks</h2>
+            </div>
+          <TaskMap />
+          </div>
+        )}
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import TaskMap from '../components/TaskMap';
+import TaskMap from './TaskMap';
 import './Worker_Dash.css';
 
 const WorkerDashboard = () => {
@@ -27,9 +27,6 @@ const WorkerDashboard = () => {
   return (
     <div className="worker-dashboard-container main-content">
       <h1>Worker Dashboard</h1>
-      <div className="map-section">
-        <TaskMap />
-      </div>
     </div>
   );
 };

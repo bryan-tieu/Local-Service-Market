@@ -3,12 +3,6 @@
   height: 100%;
 }
 
-.map-section {
-  margin-top: 20px;
-  height: calc(100vh - 100px);
-  width: 100%;
-}
-
 h1 {
   color: #333;
   margin-bottom: 20px;
