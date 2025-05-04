@@ -4,7 +4,7 @@ import './Account_Info.css';
 const AccountInfo = ({ userData }) => {
   const [skills, setSkills] = useState([]);
   const [newSkill, setNewSkill] = useState({
-    name: '',
+    skill_name: '',
     proficiency: 5,  // Default value
     years_of_experience: 1
   });
@@ -42,6 +42,12 @@ const AccountInfo = ({ userData }) => {
       const response = await fetch('http://localhost:5000/api/skills', {
         credentials: 'include'
       });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Server error:", errorData); // Debugging line
+      }
+
       if (response.ok) {
         const data = await response.json();
         setSkills(data);
@@ -52,29 +58,30 @@ const AccountInfo = ({ userData }) => {
   };
 
   const handleAddSkill = async () => {
-    if (!newSkill.name.trim()) {
-      alert('Please enter a skill name');
-      return;
-    }
 
     try {
       const response = await fetch('http://localhost:5000/api/skills', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: newSkill.name,
+          skill_name: newSkill.skill_name,
           proficiency: newSkill.proficiency,
           years_of_experience: newSkill.years_of_experience
         }),
         credentials: 'include'
       });
       
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Server error:", errorData); // Debugging line
+      }
+
       console.log('Response:', response); // Debugging line
       if (response.ok) {
         const addedSkill = await response.json();
         setSkills([...skills, addedSkill.skill]);
         setNewSkill({
-          name: '',
+          skill_name: '',
           proficiency: 5,
           years_of_experience: 1
         });
@@ -86,7 +93,7 @@ const AccountInfo = ({ userData }) => {
 
   const handleDeleteSkill = async (skillId) => {
     try {
-      const response = await fetch(`/api/skills/${skillId}`, {
+      const response = await fetch(`http://localhost:5000/api/skills/${skillId}`, {
         method: 'DELETE',
         credentials: 'include'
       });
@@ -123,61 +130,63 @@ const AccountInfo = ({ userData }) => {
           <p>No user data available. Please log in.</p>
           )}
           </div>
-      
-      {userData?.userType === 'Worker' && (
-        <div className="skills-container">
-          <h1>Skills</h1>
-          <div className="skill-input-container">
-            {/* Skill Name */}
-            <input
-              id="skill-name"
-              type="text"
-              placeholder="Skill name (e.g., Plumbing)"
-              value={newSkill.name}
-              onChange={(e) => setNewSkill({...newSkill, name: e.target.value})}
-            />
-
-            {/* Proficiency (Dropdown 1-10) */}
-            <select
-              id="skill-proficiency"
-              value={newSkill.proficiency}
-              onChange={(e) => setNewSkill({...newSkill, proficiency: parseInt(e.target.value)})}
-            >
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
-                <option key={num} value={num}>{num}</option>
-              ))}
-            </select>
-
-            {/* Years of Experience (Number Input) */}
-            <input
-              id="skill-years"
-              type="number"
-              min="0"
-              step="0.5"
-              placeholder="Years"
-              value={newSkill.years_of_experience}
-              onChange={(e) => setNewSkill({...newSkill, years_of_experience: parseFloat(e.target.value) || 0})}
-            />
-
-            <button onClick={handleAddSkill}>Add Skill</button>
-          </div>
-          <div className="skills-list">
-            {skills.map(skill => (
-              <div key={skill.id} className="skill-item">
-                <span>{skill.name}</span>
-                <button 
-                  className="delete-skill-button"
-                  onClick={() => handleDeleteSkill(skill.id)}
+        
+          {userData?.userType === 'Worker' && (
+            <div className="skills-container">
+              <h1>Skills</h1>
+              <div className="skill-input-container">
+                {/* Skill Name */}
+                <input
+                  id="skill-name"
+                  type="text"
+                  placeholder="Skill name (e.g., Plumbing)"
+                  value={newSkill.skill_name}
+                  onChange={(e) => setNewSkill({...newSkill, skill_name: e.target.value})}
+                />
+    
+                {/* Proficiency (Dropdown 1-10) */}
+                <select
+                  id="skill-proficiency"
+                  value={newSkill.proficiency}
+                  onChange={(e) => setNewSkill({...newSkill, proficiency: parseInt(e.target.value)})}
                 >
-                  ×
-                </button>
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
+                    <option key={num} value={num}>{num}</option>
+                  ))}
+                </select>
+    
+                {/* Years of Experience (Number Input) */}
+                <input
+                  id="skill-years"
+                  type="number"
+                  min="0"
+                  step="0.5"
+                  placeholder="Years"
+                  value={newSkill.years_of_experience}
+                  onChange={(e) => setNewSkill({...newSkill, years_of_experience: parseFloat(e.target.value) || 0})}
+                />
+    
+                <button onClick={handleAddSkill}>Add Skill</button>
               </div>
-            ))}
-          </div>
-        </div>
-      )}    
-    </div>
+              <div className="skills-list">
+                {skills.map(skill => (
+                  <div key={skill.id} className="skill-item">
+                    <span><strong>{skill.skill_name.toUpperCase()}</strong></span>
+                    <span><strong>Proficiency: </strong> {skill.proficiency}</span>
+                    <span><strong>Years of Experience: </strong> {skill.years_of_experience}</span>
+                    <button 
+                      className="delete-skill-button"
+                      onClick={() => handleDeleteSkill(skill.id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+    </div>   
   );
-};
+}
 
 export default AccountInfo;

@@ -495,7 +495,7 @@ def get_skills():
         skills = Skill.query.filter_by(user_id=user_id).all()
         return jsonify([{
             'id': skill.id,
-            'name': skill.name,
+            'skill_name': skill.skill_name,
             'proficiency': skill.proficiency,
             'years_of_experience': skill.years_of_experience
             } for skill in skills]), 200
@@ -511,8 +511,9 @@ def add_skill():
         data = request.get_json()
         print('Received data:', data)
         # Validate required fields
-        required_fields = ['name', 'proficiency', 'years_of_experience']
+        required_fields = ['skill_name', 'proficiency', 'years_of_experience']
         if not all(field in data for field in required_fields):
+            print('Required fields:', required_fields)
             return jsonify({'message': 'Missing required fields'}), 400
 
         # Validate proficiency range
@@ -524,7 +525,7 @@ def add_skill():
             return jsonify({'message': 'Experience cannot be negative'}), 400
 
         skill = Skill(
-            name=data['name'],
+            skill_name=data['skill_name'],
             proficiency=data['proficiency'],
             years_of_experience=data['years_of_experience'],
             user_id=user_id
@@ -537,7 +538,7 @@ def add_skill():
             'message': 'Skill added successfully',
             'skill': {
                 'id': skill.id,
-                'name': skill.name,
+                'skill_name': skill.skill_name,
                 'proficiency': skill.proficiency,
                 'years_of_experience': skill.years_of_experience
             }
