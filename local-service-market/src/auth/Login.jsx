@@ -4,14 +4,14 @@ import './Login.css';
 import './AuthLayout.css'
 
 const Login = (props) => {
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
 
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
-
+  // Handles user input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -20,7 +20,9 @@ const Login = (props) => {
     }));
   };
 
+  // Handles user submission
   const handleSubmit = async (e) => {
+    
     e.preventDefault();
 
     // Clear previous error messages

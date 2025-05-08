@@ -11,12 +11,12 @@ tasks_bp = Blueprint('tasks', __name__)
 def get_tasks():
     
     try:
-        
+        # Extract data
         user_id = session.get('user_id')
         user_id_str = str(user_id)
-
         status_filter = request.args.get('status')
-        print("Status filter:", status_filter)  # DEBUGGING
+        # print("Status filter:", status_filter)  
+        
         # Check if user is authenticated
         if not user_id:
             return jsonify({'message': 'Not authenticated'}), 401
@@ -28,12 +28,15 @@ def get_tasks():
         else:
             query = Task.query.filter_by(user_id=user_id)
             
-        print("Now filtering by status:", status_filter)  # DEBUGGING
+        # print("Now filtering by status:", status_filter)
+        
+        # Status check for the tasks using the filter
         if status_filter == 'Completed':
             query = query.filter_by(status='Completed')
         elif status_filter == 'Incomplete':
             query = query.filter(Task.status != 'Completed') 
-            
+        
+        # Assign the query to the tasks once the filter is applied    
         tasks = query.all()
         
         pst = pytz.timezone('America/Los_Angeles')
@@ -132,6 +135,7 @@ def post_task():
             created=datetime.now(timezone.utc).astimezone(pytz.timezone('America/Los_Angeles'))                                  
         )
         
+        # Add task to the database
         db.session.add(task)
         db.session.commit()
         
@@ -154,18 +158,18 @@ def post_task():
         
     except ValueError as error:
         return jsonify({'message': 'Invalid date format'}), 400
+    
     except Exception as error:
         db.session.rollback() 
         return jsonify({'message': str(error)}), 500
-
-
-    
 
 # Workers Flow for accepting a task
 @tasks_bp.route('/tasks/<int:task_id>/accept', methods=['POST'])
 @login_required
 def accept_task(task_id):
+    
     try:
+        # Extract data
         user_id = session.get('user_id')
         task = Task.query.get(task_id)
         

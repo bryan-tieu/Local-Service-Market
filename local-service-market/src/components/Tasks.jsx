@@ -13,20 +13,25 @@ const Tasks = (props) => {
   const [statusFilter, setStatusFilter] = useState('All'); 
   const location = useLocation();
 
+  // Fetch all tasks 
   const fetchTasks = async () => {
+
     try {
 
+      // Endpoint based on props (status filter)
       let endpoint = props.findAll
       ? 'http://localhost:5000/api/find_tasks'
       : 'http://localhost:5000/api/tasks';
 
       const url = new URL(endpoint);
 
+      // Set the filter
       if (statusFilter !== 'All') {
         url.searchParams.append('status', statusFilter);
       }
-      console.log("Fetching tasks from:", url.toString()); // Debugging line
+      // console.log("Fetching tasks from:", url.toString());
 
+      // Fetch from api
       const response = await fetch(url.toString(), {
         credentials: 'include',
         headers: {
@@ -36,14 +41,18 @@ const Tasks = (props) => {
         mode: 'cors'
       });
 
+      // Error handling for unsuccessful fetch
       if (!response.ok) {
         const errorData = await response.json();
-        console.error("Server error:", errorData); // Debugging line
+        console.error("Server error:", errorData); 
         throw new Error('Failed to fetch tasks');
       }
 
       const data = await response.json();
-      console.log("Response data:", data); // Debugging line
+      
+      //console.log("Response data:", data); 
+      
+      // Set the tasks based on fetched data
       setTasks(data);
 
     } catch (err) {
@@ -51,6 +60,7 @@ const Tasks = (props) => {
     }
   };
 
+  // Get logged in user data
   const fetchUserData = async () => {
     try {
       const response = await fetch('http://localhost:5000/api/check-auth', {
@@ -60,10 +70,15 @@ const Tasks = (props) => {
           'Content-Type': 'application/json'
         }
       });
+
+      // Error handling for bad response
       if (!response.ok) {
         throw new Error('Failed to fetch user data');
       }
+
       const data = await response.json();
+      
+      // Set user type for specific page loading
       setUserType(data.user?.userType);
 
     } catch (err) {
@@ -76,9 +91,13 @@ const Tasks = (props) => {
     fetchUserData();
   }, [props.findAll, statusFilter]);
 
+  // Handles a worker accepting a job
   const handleAcceptJob = async () => {
+
     if (!selectedTask) return;
+    
     try {
+      // Fetch from api
       const response = await fetch(`http://localhost:5000/api/tasks/${selectedTask.id}/accept`, {
         method: 'POST',
         credentials: 'include',
@@ -90,12 +109,16 @@ const Tasks = (props) => {
     } catch (error) {
       console.error('Error accepting job:', error);
     }
+
     fetchTasks();
   };
-
+  
+  // Handles transactions based on a worker completing a job
   const handleCompleteJob = async () => {
     if (!selectedTask) return;
+    
     try {
+      // Fetch from api
       const response = await fetch(`http://localhost:5000/api/complete-task/${selectedTask.id}/complete`, {
         method: 'POST',
         credentials: 'include',
@@ -105,6 +128,7 @@ const Tasks = (props) => {
         },
       });
 
+      // Error handling for bad response
       if (!response.ok) {
         const errorData = await response.json();
         console.error('Error completing job:', errorData);
@@ -112,25 +136,28 @@ const Tasks = (props) => {
       }
 
       const result = await response.json();
-      console.log('Job completed and payment initiated:', result);
-      alert('Job completed successfully! Payment has been initiated.');
+      // console.log('Job completed and payment initiated:', result);
+      // alert('Job completed successfully! Payment has been initiated.');
+      
       fetchTasks();
+
     } catch (error) {
       console.error('Error completing job:', error);
-      alert(`Error: ${error.message}`);
     }
 };
 
+  // Used to expand task box
   const handleTaskClick = (taskId) => {
     setExpandedTaskId(expandedTaskId === taskId ? null : taskId);
     setSelectedTask(tasks.find(task => task.id === taskId));
   };
 
+  // Formatting date
   const formatDeadline = (dateString) => {
     if (!dateString) return 'N/A';
 
     try {
-      // Try multiple date formats
+      // Multiple date formats
       const possibleFormats = [
         'dd-MM-yyyy',
         'MM/dd/yyyy',
@@ -138,15 +165,18 @@ const Tasks = (props) => {
         'yyyy-MM-dd'
       ];
 
+      // Find a valid date format for what was submitted
       let parsedDate;
       for (const fmt of possibleFormats) {
         parsedDate = parse(dateString, fmt, new Date());
         if (!isNaN(parsedDate.getTime())) break;
       }
 
+      // Return if none found
       if (isNaN(parsedDate.getTime())) return dateString;
 
       return format(parsedDate, 'MMMM d, yyyy');
+      
     } catch {
       return dateString;
     }

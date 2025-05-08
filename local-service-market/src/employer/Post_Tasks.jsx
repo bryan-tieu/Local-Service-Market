@@ -5,8 +5,6 @@ import { set } from "date-fns";
 const PosttaskForm = () => {
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-
-  // Form data state
   const [formData, setFormData] = useState({
     task_title: "",
     task_description: "",
@@ -23,12 +21,15 @@ const PosttaskForm = () => {
 
   // Handle form submission
   const handleSubmit = async (e) => {
+
+    // Reset the page
     e.preventDefault();
     setError('');
     setSuccessMessage('');
 
     // Validate form data
     try {
+      // Fetch from api
       const response = await fetch('http://localhost:5000/api/post_task', {
         method: 'POST',
         headers: {
@@ -46,7 +47,8 @@ const PosttaskForm = () => {
         return;
       }
 
-      console.log('Task posted successfully:', data);
+      //console.log('Task posted successfully:', data);
+
       setSuccessMessage('Task posted successfully!');
       setError('');
 
@@ -60,8 +62,9 @@ const PosttaskForm = () => {
         deadline: ""
       });
 
+      // 5 Second timer to remove success message
       setTimeout(() => {
-        setSuccessMessage(''); // Clear success message after 5 seconds
+        setSuccessMessage('');
       }, 5000);
       
     } catch (error) {
@@ -69,7 +72,7 @@ const PosttaskForm = () => {
       setError('Error posting task. Please try again later.');
     }
     
-    console.log('Form submitted:', formData);
+    // console.log('Form submitted:', formData);
   };
 
   return (

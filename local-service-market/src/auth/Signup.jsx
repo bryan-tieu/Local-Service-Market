@@ -7,8 +7,6 @@ const Signup = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-
-  // Form data state
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -39,6 +37,7 @@ const Signup = () => {
 
   // Handle form submission
   const handleSubmit = async (e) => {
+
     e.preventDefault();
     
     // Clear previous error messages
@@ -70,7 +69,7 @@ const Signup = () => {
         
           setSuccess(true);
             
-        console.log('Signup successful:', data);
+        // console.log('Signup successful:', data);
 
         setError('');
 
@@ -82,10 +81,11 @@ const Signup = () => {
             phoneNumber: '',
             userType: 'Worker'
             });
+
     } catch (error) {
         setError(error.message);
     }
-    console.log('Form submitted:', formData);
+    // console.log('Form submitted:', formData);
   };
 
   return (

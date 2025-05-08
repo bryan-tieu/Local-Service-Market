@@ -8,15 +8,20 @@ skills_bp = Blueprint('skills', __name__)
 @skills_bp.route('/skills', methods=['GET'])
 @login_required
 def get_skills():
+    
     try:
+        #Extract Data
         user_id = session.get('user_id')
         skills = Skill.query.filter_by(user_id=user_id).all()
+        
+        # Return object
         return jsonify([{
             'id': skill.id,
             'skill_name': skill.skill_name,
             'proficiency': skill.proficiency,
             'years_of_experience': skill.years_of_experience
             } for skill in skills]), 200
+        
     except Exception as e:
         return jsonify({'message': str(e)}), 500
 
@@ -24,10 +29,14 @@ def get_skills():
 @skills_bp.route('/skills', methods=['POST'])
 @login_required
 def add_skill():
+    
     try:
+        #Extract data
         user_id = session.get('user_id')
         data = request.get_json()
-        print('Received data:', data)
+        
+        # print('Received data:', data)
+        
         # Validate required fields
         required_fields = ['skill_name', 'proficiency', 'years_of_experience']
         if not all(field in data for field in required_fields):
@@ -42,6 +51,7 @@ def add_skill():
         if data['years_of_experience'] < 0:
             return jsonify({'message': 'Experience cannot be negative'}), 400
 
+        # Database object        
         skill = Skill(
             skill_name=data['skill_name'],
             proficiency=data['proficiency'],
@@ -49,9 +59,11 @@ def add_skill():
             user_id=user_id
         )
         
+        # Add to database
         db.session.add(skill)
         db.session.commit()
         
+        # Return success object
         return jsonify({
             'message': 'Skill added successfully',
             'skill': {
@@ -70,13 +82,17 @@ def add_skill():
 @skills_bp.route('/skills/<int:skill_id>', methods=['DELETE'])
 @login_required
 def delete_skill(skill_id):
+    
     try:
+        # Extract data
         user_id = session.get('user_id')
         skill = Skill.query.filter_by(id=skill_id, user_id=user_id).first()
         
+        # No skills matched
         if not skill:
             return jsonify({'message': 'Skill not found'}), 404
-            
+        
+        # Add to database
         db.session.delete(skill)
         db.session.commit()
         

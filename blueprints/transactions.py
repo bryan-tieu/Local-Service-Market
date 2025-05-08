@@ -9,7 +9,8 @@ transactions_bp = Blueprint('transactions', __name__)
 @login_required
 def complete_task(task_id):
     try:
-        # Get the task
+        
+        # Extract data
         task = Task.query.get_or_404(task_id)
         user_id = session.get('user_id')
         
@@ -17,26 +18,26 @@ def complete_task(task_id):
         if user_id != task.worker_id:
             return jsonify({'error': 'You are not assigned to this task'}), 403
         
-        # Verify the task is in 'Assigned' status
+        # Verify the task is assigned
         if task.status != 'Assigned':
             return jsonify({'error': 'Task is not in progress'}), 400
         
         # Create a new transaction
         transaction = Transaction(
-            sender_id=task.user_id,  # employer
-            receiver_id=task.worker_id,  # worker
+            sender_id=task.user_id,  
+            receiver_id=task.worker_id,  
             task_id=task.id,
             amount=task.budget,
             description=f"Payment for task: {task.task_title}",
             status='Completed'
         )
         
+        # Add transaction to the database
         db.session.add(transaction)
-        
-        # Update task status
-        task.status = 'Completed'
-        
         db.session.commit()
+        
+        # Update task status once transaction is successfully added
+        task.status = 'Completed'
         
         response = jsonify({
             'message': 'Task completed and payment initiated',
@@ -57,12 +58,15 @@ def complete_task(task_id):
 @transactions_bp.route('/transactions/received', methods=['GET'])
 @login_required
 def get_received_transactions():
+    
     try:
+        # Extract data
         user_id = session.get('user_id')
         
         # Query transactions where the current user is the receiver
         transactions = Transaction.query.filter_by(receiver_id=user_id).all()
         
+        # Return list of transactions for the specific user
         return jsonify({
             'transactions': [{
                 'id': t.id,

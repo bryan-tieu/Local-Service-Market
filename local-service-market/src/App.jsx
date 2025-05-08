@@ -18,11 +18,13 @@ function App() {
   const [count, setCount] = useState(0)
   const [currentUser, setCurrentUser] = useState(null);
 
+  // User auth on login
   const handleLogin = (userData) => {
     setIsAuthenticated(true);
     setCurrentUser(userData);
   }
 
+  // Reset user auth on logout
   const handleLogout = async () => {
     setIsAuthenticated(false);
     setCurrentUser(null);
@@ -31,7 +33,9 @@ function App() {
   // Check authentication status on initial load
   useEffect(() => {
     const checkAuth = async () => {
+      
       try {
+        // Fetch from api
         const response = await fetch('http://localhost:5000/api/check-auth', {
           credentials: 'include',
           headers: {
@@ -53,10 +57,12 @@ function App() {
         if (data.authenticated) {
           setIsAuthenticated(true);
           setCurrentUser(data.user); 
+
         } else{
           setIsAuthenticated(false);
           setCurrentUser(null);
         }
+
       } catch (error) {
         console.error('Auth check failed:', error);
         setIsAuthenticated(false);
@@ -65,6 +71,7 @@ function App() {
     };
     
     checkAuth();
+    
   }, []);
 
   return (

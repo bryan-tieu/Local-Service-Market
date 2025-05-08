@@ -7,7 +7,7 @@ users_bp = Blueprint('users', __name__)
 # User Database Route (manual testing)
 @users_bp.route('/users', methods=['GET'])
 def get_users():
-    # Fetch all users from the database
+    # Extract data
     users = User.query.all()
     
     # Return users as JSON

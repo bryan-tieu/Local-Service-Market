@@ -14,6 +14,7 @@ class User(db.Model):
     #transactions_sent = db.relationship('Transaction', foreign_keys='Transaction.sender_id', back_populates='user', cascade="all, delete-orphan")
     #transactions_received = db.relationship()
     
+# Skill Model
 class Skill(db.Model):
     __tablename__ = 'skill'
     id = db.Column(db.Integer, primary_key=True)
@@ -25,6 +26,7 @@ class Skill(db.Model):
 
    # user = db.relationship()
     
+# Task Model
 class Task(db.Model):
     __tablename__ = 'task'
     id = db.Column(db.Integer, primary_key=True)
@@ -42,6 +44,7 @@ class Task(db.Model):
     creator = db.relationship('User', foreign_keys=[user_id], backref='created_tasks')
     worker = db.relationship('User', foreign_keys=[worker_id], backref='assigned_tasks')
 
+# Transaction Model
 class Transaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     sender_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -56,6 +59,7 @@ class Transaction(db.Model):
     receiver = db.relationship('User', foreign_keys=[receiver_id], backref='received_transactions')
     task = db.relationship('Task', backref='transactions')
 
+# Message Model
 class Message(db.Model):
     __tablename__ = 'message'
     id = db.Column(db.Integer, primary_key=True)

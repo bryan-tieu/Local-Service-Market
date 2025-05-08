@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Display.css';
+// DEVELOPMENT USE ONLY
+// This is made solely to debug from database
 
 const AllTasks = () => {
   const [tasks, setTasks] = useState([]);

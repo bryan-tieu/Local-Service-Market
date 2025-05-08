@@ -3,17 +3,18 @@ import './Account_Info.css';
 
 const AccountInfo = ({ userData }) => {
   const [skills, setSkills] = useState([]);
+  const [balance, setBalance] = useState(0);
+  const [transactions, setTransactions] = useState([]);
+  const [expandedTransactionId, setExpandedTransactionId] = useState(null);
   const [newSkill, setNewSkill] = useState({
     skill_name: '',
     proficiency: '',  // Default value
     years_of_experience: "Years" // Default value
   });
-  const [balance, setBalance] = useState(0);
-  const [transactions, setTransactions] = useState([]);
-  const [expandedTransactionId, setExpandedTransactionId] = useState(null);
 
   // Function to format phone numbers
   const formatPhoneNumber = (phoneNumber) => {
+
     // Remove all non-digit characters
     const cleaned = ('' + phoneNumber).replace(/\D/g, '');
     
@@ -30,35 +31,48 @@ const AccountInfo = ({ userData }) => {
 
   // Function to format user ID (for employers to pad with leading zero)
   const formatUserId = (userId, userType) => {
+
+    // User ID Formatting
     if (userType === 'Employer') {
       // Add leading zero for Employer
       return userId.toString().padStart(8, '0');
     }
+
     return userId;
   };
   
+  // Fetch all user skills 
   const fetchSkills = async () => {
+
     try {
+      // Fetch from api
       const response = await fetch('http://localhost:5000/api/skills', {
         credentials: 'include'
       });
 
+      // Error handling for bad response
       if (!response.ok) {
         const errorData = await response.json();
         console.error("Server error:", errorData);
       }
 
+      // Set the skills once fetch is successful
       if (response.ok) {
         const data = await response.json();
         setSkills(data);
       }
+
     } catch (error) {
       console.error('Error fetching skills:', error);
     }
   };
 
+  // Fetch all transactions & display total balance for workers
   const fetchTransactions = async () => {
+    
     try {
+
+      // Fetch from api
       const response = await fetch('http://localhost:5000/api/transactions/received', {
         credentials: 'include',
         headers: {
@@ -66,19 +80,27 @@ const AccountInfo = ({ userData }) => {
         }
       });
   
+      // Error handling for bad response
       if (!response.ok) {
         throw new Error(`Failed to fetch transactions: ${response.status}`);
       }
+
+      // Get data and set it to our transaction state
       const data = await response.json();
       setTransactions(data.transactions);
-      console.log('Transactions data:', data); // Debug log
-      console.log(data.transactions[0].amount);
+      // console.log('Transactions data:', data);
+      // console.log(data.transactions[0].amount);
+      
+      // Caclculate worker balance based on transaction history
       let total = 0;
+
       for (let i = 0; i < transactions.length; i++) {
         total += Number(data.transactions[i].amount);
       }
-      console.log('Calculated balance:', total); // Debug log
+
+      // console.log('Calculated balance:', total); 
       setBalance(total);
+
     } catch (error) {
       console.error('Error fetching transactions:', error);
       setTransactions([]);
@@ -86,8 +108,11 @@ const AccountInfo = ({ userData }) => {
     }
   };
 
+  // Add skill function
   const handleAddSkill = async () => {
+    
     try {
+      // Fetch from api
       const response = await fetch('http://localhost:5000/api/skills', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -99,13 +124,19 @@ const AccountInfo = ({ userData }) => {
         credentials: 'include'
       });
       
+      // Error handling for bad repsonse
       if (!response.ok) {
         const errorData = await response.json();
         console.error("Server error:", errorData);
       }
-
+      
+      // Set the new skill state
       if (response.ok) {
+
+        // Wait for POST
         const addedSkill = await response.json();
+        
+        // Set skill state once successful
         setSkills([...skills, addedSkill.skill]);
         setNewSkill({
           skill_name: '',
@@ -113,31 +144,38 @@ const AccountInfo = ({ userData }) => {
           years_of_experience: 1
         });
       }
+
     } catch (error) {
       console.error('Error adding skill:', error);
     }
   };
 
+  // Delete skill function
   const handleDeleteSkill = async (skillId) => {
+
     try {
+      // Fetch from api
       const response = await fetch(`http://localhost:5000/api/skills/${skillId}`, {
         method: 'DELETE',
         credentials: 'include'
       });
       
+      // Set the skill state to delete
       if (response.ok) {
         setSkills(skills.filter(skill => skill.id !== skillId));
       }
+
     } catch (error) {
       console.error('Error deleting skill:', error);
     }
   };
 
+  // Display skills for workers; Display transactions for employers and workers
   useEffect(() => {
     if (userData?.userType === 'Worker') {
       fetchSkills();
-      fetchTransactions();
     }
+    fetchTransactions();
   }, [userData]);
 
   return (

@@ -17,11 +17,11 @@ def login_required(f):
     return decorated_function
 
 # Routes
+
 # Signup Route
-@auth_bp.route('/signup', methods=['POST', 'OPTIONS'])
+@auth_bp.route('/signup', methods=['POST'])
 def signup():
-    if request.method == 'OPTIONS':
-        return jsonify({}), 200
+    
     try:
         data = request.get_json()
         
@@ -74,10 +74,8 @@ def signup():
         return jsonify({'message': str(e)}), 500
 
 # Login Route
-@auth_bp.route('/login', methods=['POST', 'OPTIONS'])
+@auth_bp.route('/login', methods=['POST'])
 def login():
-    if request.method == 'OPTIONS':
-        return jsonify({}), 200
     
     try:
         data = request.get_json()
@@ -132,6 +130,7 @@ def login():
 # Logout Feature 
 @auth_bp.route('/logout', methods=['POST'])
 def logout():
+    
     try:
         
         # Clear the session
@@ -156,6 +155,7 @@ def logout():
 @auth_bp.route('/check-auth', methods=['GET'])
 @login_required
 def check_auth():
+    
     try:
         user_id = session.get('user_id')
         
