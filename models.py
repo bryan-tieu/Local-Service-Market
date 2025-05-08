@@ -40,6 +40,9 @@ class Task(db.Model):
     created = db.Column(db.DateTime(timezone=True), nullable=False, server_default=db.func.now())
     worker_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     status = db.Column(db.String(20), default='Open')
+    latitude = db.Column(db.Float, nullable=True)
+    longitude = db.Column(db.Float, nullable=True)
+    
     
     creator = db.relationship('User', foreign_keys=[user_id], backref='created_tasks')
     worker = db.relationship('User', foreign_keys=[worker_id], backref='assigned_tasks')

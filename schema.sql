@@ -21,6 +21,8 @@ CREATE TABLE task (
   budget INTEGER NOT NULL,
   deadline TIMESTAMP NOT NULL,
   worker_id INTEGER,
+  latitude REAL
+  longitude REAL
   status TEXT NOT NULL,
   FOREIGN KEY (user_id) REFERENCES user (id)
 );

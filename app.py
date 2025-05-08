@@ -2,6 +2,7 @@ from flask import Flask
 from flask_cors import CORS
 from extensions import bcrypt
 from models import db
+from flask_migrate import Migrate
 from blueprints.auth import auth_bp
 from blueprints.tasks import tasks_bp
 from blueprints.users import users_bp
@@ -53,6 +54,8 @@ bcrypt.init_app(app)
 # Create the database and tables
 with app.app_context():
     db.create_all()
+
+migrate = Migrate(app, db)
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

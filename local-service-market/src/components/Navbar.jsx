@@ -5,6 +5,7 @@ import './Navbar.css';
 const Navbar = ({ isAuthenticated, handleLogout, userType }) => {
   const navigate = useNavigate();
 
+  // Log the user out
   const handleLogoutClick = async () => {
     try {
       await fetch('http://localhost:5000/api/logout', {

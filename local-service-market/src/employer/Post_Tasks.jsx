@@ -136,7 +136,7 @@ const PosttaskForm = () => {
               <option value="Cleaning">Cleaning</option>
               <option value="Gardening">Gardening</option>
               <option value="Painting">Painting</option>
-              <option value="O11ther">Other</option>
+              <option value="Other">Other</option>
             </select>
           </div>
           

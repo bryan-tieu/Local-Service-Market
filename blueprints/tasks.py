@@ -3,7 +3,19 @@ from models import db, Task, User, Transaction
 from blueprints.auth import login_required
 from datetime import datetime, timezone
 import pytz
+from geopy.geocoders import Nominatim
+from geopy.exc import GeocoderTimedOut, GeocoderUnavailable
 
+geolocator = Nominatim(user_agent="local_serivce_market")
+
+def get_coordinates(address):
+    try:
+        location = geolocator.geocode(address)
+        if location:
+            return location.latitude, location.longitude
+        return None, None
+    except (GeocoderTimedOut, GeocoderUnavailable):
+        return None, None
 tasks_bp = Blueprint('tasks', __name__)
 
 # Used to get specific tasks for employers
@@ -68,30 +80,36 @@ def get_tasks():
 @login_required
 def find_tasks():
     try:
-        
         # Find all open tasks
         tasks = Task.query.filter_by(status='Open').all()
         pst = pytz.timezone('America/Los_Angeles')
         
-        # Return tasks as JSON
-        return jsonify([{
-            'id': task.id,
-            'date_created': task.created.astimezone(pst).isoformat() if task.created else None,
-            'task_title': task.task_title,
-            'task_description': task.task_description,
-            'task_type': task.task_type,
-            'location': task.location,
-            'budget': task.budget,
-            'deadline': task.deadline,
-            'user_id': f"{task.user_id:08d}",
-            'employer_name': task.creator.name,
-            'status': task.status,
-            'user_type': 'Worker',
-        } for task in tasks])
+        # Geocode each task's location and prepare response
+        tasks_data = []
+        for task in tasks:
+            lat, lng = get_coordinates(task.location)  
+            
+            tasks_data.append({
+                'id': task.id,
+                'date_created': task.created.astimezone(pst).isoformat() if task.created else None,
+                'task_title': task.task_title,
+                'task_description': task.task_description,
+                'task_type': task.task_type,
+                'location': task.location,  
+                'budget': task.budget,
+                'deadline': task.deadline,
+                'user_id': f"{task.user_id:08d}",
+                'employer_name': task.creator.name,
+                'status': task.status,
+                'user_type': 'Worker',
+                'latitude': lat,  
+                'longitude': lng,  
+            })
         
-    except Exception as error:
-        return jsonify({'message': str(error)}), 500
+        return jsonify(tasks_data)
     
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
     
 # Post Task Feature for employers
@@ -121,7 +139,7 @@ def post_task():
         required_fields = ['task_title', 'task_description', 'task_type', 'location', 'budget', 'deadline']
         if not all(field in data for field in required_fields):
             return jsonify({'message': 'Missing required fields'}), 400
-        
+        lat, lng = get_coordinates(data['location'])
         # Store task in the database
         task = Task(
             user_id=user.id,
@@ -132,6 +150,8 @@ def post_task():
             status='Open',
             budget=data['budget'],
             deadline=data['deadline'],
+            latitude=lat,
+            longitude=lng,
             created=datetime.now(timezone.utc).astimezone(pytz.timezone('America/Los_Angeles'))                                  
         )
         
@@ -152,6 +172,8 @@ def post_task():
                 'budget': task.budget,
                 'deadline': task.deadline,
                 'status': task.status,
+                'latitude': task.latitude,
+                'longitude': task.longitude,
                 'created': task.created.isoformat()
             }
         }), 201
@@ -189,4 +211,5 @@ def accept_task(task_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({'message': str(e)}), 500
+    
     

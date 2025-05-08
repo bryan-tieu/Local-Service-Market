@@ -156,7 +156,7 @@ const TaskMap = () => {
         {tasks.map((task) => (
           <Marker
             key={task.id}
-            position={[task.latitude || userPosition.lat, task.longitude || userPosition.lng]}
+            position={[task.latitude, task.longitude]}
             icon={taskIcon}
           >
             <Popup>
