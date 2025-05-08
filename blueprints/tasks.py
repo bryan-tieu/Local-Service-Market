@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, session
-from models import db, Task, User
+from models import db, Task, User, Transaction
 from blueprints.auth import login_required
 from datetime import datetime, timezone
 import pytz
@@ -181,30 +181,6 @@ def accept_task(task_id):
         db.session.commit()
         
         return jsonify({'message': 'Task accepted successfully'}), 200
-    
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({'message': str(e)}), 500
-    
-# Workers Flow for completing a task
-@tasks_bp.route('/tasks/<int:task_id>/complete', methods=['POST'])
-@login_required
-def complete_task(task_id):
-    try:
-        user_id = session.get('user_id')
-        task = Task.query.get(task_id)
-        
-        # Check if task is assigned to the worker
-        if not task:
-            return jsonify({'message': 'Task not found'}), 404
-        if task.worker_id != user_id:
-            return jsonify({'message': 'You are not assigned to this task'}), 403
-        
-        # Mark the task as completed
-        task.status = 'Completed'
-        db.session.commit()
-        
-        return jsonify({'message': 'Task marked as completed successfully'}), 200
     
     except Exception as e:
         db.session.rollback()

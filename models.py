@@ -52,9 +52,9 @@ class Transaction(db.Model):
     timestamp = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     status = db.Column(db.String(20), nullable=False, default='Pending')
 
-    #sender = db.relationships()
-    #receiver = db.relationships()
-    #task = db.relationships()
+    sender = db.relationship('User', foreign_keys=[sender_id], backref='sent_transactions')
+    receiver = db.relationship('User', foreign_keys=[receiver_id], backref='received_transactions')
+    task = db.relationship('Task', backref='transactions')
 
 class Message(db.Model):
     __tablename__ = 'message'

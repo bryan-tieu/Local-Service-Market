@@ -86,6 +86,7 @@ const Tasks = (props) => {
           'Content-Type': 'application/json'
         },
     });
+
     } catch (error) {
       console.error('Error accepting job:', error);
     }
@@ -95,18 +96,30 @@ const Tasks = (props) => {
   const handleCompleteJob = async () => {
     if (!selectedTask) return;
     try {
-      const response = await fetch(`http://localhost:5000/api/tasks/${selectedTask.id}/complete`, {
+      const response = await fetch(`http://localhost:5000/api/complete-task/${selectedTask.id}/complete`, {
         method: 'POST',
         credentials: 'include',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
         },
       });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Error completing job:', errorData);
+        throw new Error(errorData.error || 'Failed to complete job');
+      }
+
+      const result = await response.json();
+      console.log('Job completed and payment initiated:', result);
+      alert('Job completed successfully! Payment has been initiated.');
+      fetchTasks();
     } catch (error) {
       console.error('Error completing job:', error);
+      alert(`Error: ${error.message}`);
     }
-    fetchTasks();
-  };
+};
 
   const handleTaskClick = (taskId) => {
     setExpandedTaskId(expandedTaskId === taskId ? null : taskId);
@@ -139,6 +152,7 @@ const Tasks = (props) => {
     }
   };
 
+  
   if (error) return <div>Error: {error}</div>;
 
   return (

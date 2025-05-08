@@ -32,4 +32,18 @@ CREATE TABLE skill (
   proficiency INTEGER NOT NULL,
   years_of_experience INTEGER NOT NULL,
   FOREIGN KEY (user_id) REFERENCES user (id)
-)
+);
+
+CREATE TABLE transaction (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  sender_id INTEGER NOT NULL,
+  receiver_id INTEGER NOT NULL,
+  task_id INTEGER NOT NULL,
+  amount REAL NOT NULL,
+  description TEXT,
+  timestamp TIMESTAMP NOT NULL DEFAULT (datetime('now', 'localtime')),
+  status TEXT NOT NULL DEFAULT 'Pending',
+  FOREIGN KEY (sender_id) REFERENCES user (id),
+  FOREIGN KEY (receiver_id) REFERENCES user (id),
+  FOREIGN KEY (task_id) REFERENCES task (id)
+);

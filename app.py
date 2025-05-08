@@ -7,6 +7,7 @@ from blueprints.tasks import tasks_bp
 from blueprints.users import users_bp
 from blueprints.skills import skills_bp
 from blueprints.messages import messages_bp
+from blueprints.transactions import transactions_bp
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -40,6 +41,7 @@ app.register_blueprint(tasks_bp, url_prefix='/api')
 app.register_blueprint(skills_bp, url_prefix='/api')
 app.register_blueprint(messages_bp, url_prefix='/api')
 app.register_blueprint(users_bp, url_prefix='/api')
+app.register_blueprint(transactions_bp, url_prefix='/api')
 
 # Database Config
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
