@@ -32,7 +32,7 @@ const EmployerDashboard = ({ }) => {
   return (
     <div className="employer-dashboard-container main-content">
       <h1>Employer Dashboard</h1>
-      <p>This is the employer page</p>
+      <p>Welcome! Select a tab to begin!</p>
     </div>
   );
 };

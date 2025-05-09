@@ -31,13 +31,13 @@ def complete_task(task_id):
             description=f"Payment for task: {task.task_title}",
             status='Completed'
         )
+        task.status = 'Completed'
         
         # Add transaction to the database
         db.session.add(transaction)
         db.session.commit()
         
         # Update task status once transaction is successfully added
-        task.status = 'Completed'
         
         response = jsonify({
             'message': 'Task completed and payment initiated',
@@ -84,3 +84,31 @@ def get_received_transactions():
         
     except Exception as e:
         return jsonify({'error': str(e)}), 500 
+
+@transactions_bp.route('/transactions/sent', methods=['GET'])
+@login_required
+def get_sent_transactions():
+    
+    try: 
+        #Extract the dat
+        user_id = session.get('user_id')
+        
+        transactions = Transaction.query.filter_by(sender_id=user_id).all()
+        
+        return jsonify({
+            'transactions': [{
+                'id': t.id,
+                'amount': t.amount,
+                'status': t.status,
+                'timestamp': t.timestamp.isoformat() if t.timestamp else None,
+                'description': t.description,
+                'task': {
+                    'id': t.task.id,
+                    'task_title': t.task.task_title,
+                    'budget': t.task.budget
+                } if t.task else None
+            } for t in transactions]
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500

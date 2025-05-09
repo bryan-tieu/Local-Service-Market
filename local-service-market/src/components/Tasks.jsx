@@ -228,6 +228,7 @@ const Tasks = (props) => {
                     minute: '2-digit',
                     hour12: true
                   }) : 'N/A'}</p>
+                  <p><strong>Deadline:</strong> {task.deadline}</p>
                   <p><strong>Status:</strong> {task.status}</p>
                   <p><strong>Worker:</strong> {task.worker_name}</p>
                   <p><strong>Worker ID:</strong> {task.worker_id}</p>

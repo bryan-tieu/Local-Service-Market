@@ -174,6 +174,7 @@ const TaskMap = () => {
                     minute: '2-digit',
                     hour12: true
                   }) : 'N/A'}</p>
+                  <p><strong>Deadline:</strong>{task.deadline}</p>
                   <p><strong>Status:</strong> {task.status || 'N/A'}</p>
                   <p><strong>Worker:</strong> {task.worker_name || 'N/A'}</p>
                   <p><strong>Worker ID:</strong> {task.worker_id || 'N/A'}</p>
