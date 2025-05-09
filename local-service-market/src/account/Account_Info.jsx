@@ -275,7 +275,7 @@ const AccountInfo = ({ userData }) => {
               </div>
             ))
           ) : (
-            <p>No transactions yet</p>
+            <p style={{ color: "black" }}>No transactions yet</p>
           )}
         </div>
       </div>

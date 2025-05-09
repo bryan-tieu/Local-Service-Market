@@ -153,7 +153,9 @@ const TaskMap = () => {
           <Popup>Your position</Popup>
         </Marker>
 
-        {tasks.map((task) => (
+        {tasks
+          .filter(task => task.latitude && task.longitude)
+          .map((task) => (
           <Marker
             key={task.id}
             position={[task.latitude, task.longitude]}
